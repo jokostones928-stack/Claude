@@ -17,11 +17,14 @@ Setup:
    export GOOGLE_SPREADSHEET_ID="your-spreadsheet-id"
 """
 
+from dotenv import load_dotenv
 import gspread
 from google.oauth2.service_account import Credentials
 import sqlite3
 import os
 from datetime import datetime, date
+
+load_dotenv()
 
 SCOPES = [
     "https://www.googleapis.com/auth/spreadsheets",

@@ -2,3 +2,7 @@ __pycache__/
 *.db
 *.pyc
 .env
+credentials.json
+*.p12
+*.pem
+service-account*.json

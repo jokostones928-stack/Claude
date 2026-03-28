@@ -1,7 +1,10 @@
 from flask import Flask, render_template, request, jsonify, redirect, url_for, flash
+from dotenv import load_dotenv
 import sqlite3
 import os
 from datetime import datetime, date
+
+load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "finance-app-secret-key-change-me")
