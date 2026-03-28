@@ -402,6 +402,21 @@ def gsheet_sync_all():
     return redirect(url_for("gsheet"))
 
 
+@app.route("/gsheet/setup", methods=["POST"])
+def gsheet_setup():
+    try:
+        from gsheet_sync import setup_spreadsheet
+        result = setup_spreadsheet()
+        flash(
+            f"Setup selesai! Sheets dibuat: Settings, Transactions, Budget, Dashboard. "
+            f"Dropdowns & formulas sudah terpasang otomatis.",
+            "success",
+        )
+    except Exception as e:
+        flash(f"Gagal setup: {str(e)}", "danger")
+    return redirect(url_for("gsheet"))
+
+
 if __name__ == "__main__":
     init_db()
     app.run(debug=True, host="0.0.0.0", port=5000)
