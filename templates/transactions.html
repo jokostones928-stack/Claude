@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block title %}Transaksi{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>💳 Daftar Transaksi</h1>
+    <button class="btn btn-primary" onclick="document.getElementById('addModal').classList.add('active')">
+        + Tambah Transaksi
+    </button>
+</div>
+
+<!-- Filters -->
+<div class="filter-bar">
+    <form method="get" style="display:flex; gap:12px; align-items:center;">
+        <input type="month" name="period" value="{{ current_period }}" class="form-control">
+        <select name="category" class="form-control">
+            <option value="">Semua Kategori</option>
+            {% for cat in categories %}
+            <option value="{{ cat.id }}" {% if selected_category == cat.id|string %}selected{% endif %}>
+                {{ cat.icon }} {{ cat.name }}
+            </option>
+            {% endfor %}
+        </select>
+        <button type="submit" class="btn btn-primary btn-sm">Filter</button>
+    </form>
+</div>
+
+<!-- Transaction Table -->
+<div class="card">
+    <div class="card-body">
+        {% if transactions %}
+        <table class="txn-table">
+            <thead>
+                <tr>
+                    <th>Tanggal</th>
+                    <th>Kategori</th>
+                    <th>Deskripsi</th>
+                    <th style="text-align:right">Jumlah</th>
+                    <th style="text-align:center">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for txn in transactions %}
+                <tr>
+                    <td>{{ txn.transaction_date }}</td>
+                    <td><span class="txn-category">{{ txn.icon }} {{ txn.category_name }}</span></td>
+                    <td>{{ txn.description }}</td>
+                    <td class="txn-amount" style="text-align:right">{{ txn.amount | rupiah }}</td>
+                    <td style="text-align:center">
+                        <form method="post" action="{{ url_for('delete_transaction', txn_id=txn.id) }}"
+                              onsubmit="return confirm('Hapus transaksi ini?')">
+                            <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p style="color:var(--text-muted);text-align:center;padding:40px;">
+            Tidak ada transaksi untuk periode ini
+        </p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Add Transaction Modal -->
+<div class="modal-overlay" id="addModal">
+    <div class="modal">
+        <h3>Tambah Transaksi Baru</h3>
+        <form method="post" action="{{ url_for('add_transaction') }}">
+            <div class="form-group">
+                <label>Kategori</label>
+                <select name="category_id" class="form-control" required>
+                    <option value="">Pilih kategori...</option>
+                    {% for cat in categories %}
+                    <option value="{{ cat.id }}">{{ cat.icon }} {{ cat.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Jumlah (Rp)</label>
+                <input type="number" name="amount" class="form-control" placeholder="0" min="1" required>
+            </div>
+            <div class="form-group">
+                <label>Deskripsi</label>
+                <input type="text" name="description" class="form-control" placeholder="Deskripsi pengeluaran..." required>
+            </div>
+            <div class="form-group">
+                <label>Tanggal</label>
+                <input type="date" name="transaction_date" class="form-control" required>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-ghost" onclick="document.getElementById('addModal').classList.remove('active')">Batal</button>
+                <button type="submit" class="btn btn-primary">Simpan</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

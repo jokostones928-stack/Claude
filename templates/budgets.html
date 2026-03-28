@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}Kelola Budget{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>🎯 Kelola Budget</h1>
+    <button class="btn btn-primary" onclick="document.getElementById('setBudgetModal').classList.add('active')">
+        + Set Budget
+    </button>
+</div>
+
+<!-- Period Filter -->
+<div class="filter-bar">
+    <form method="get" style="display:flex; gap:12px; align-items:center;">
+        <input type="month" name="period" value="{{ current_period }}" class="form-control">
+        <button type="submit" class="btn btn-primary btn-sm">Lihat</button>
+    </form>
+</div>
+
+<!-- Budget List -->
+<div class="card">
+    <div class="card-body">
+        {% if budgets %}
+        <table class="txn-table">
+            <thead>
+                <tr>
+                    <th>Kategori</th>
+                    <th style="text-align:right">Budget</th>
+                    <th>Periode</th>
+                    <th>Dibuat</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for b in budgets %}
+                <tr>
+                    <td><span class="txn-category">{{ b.icon }} {{ b.category_name }}</span></td>
+                    <td style="text-align:right; font-weight:600;">{{ b.amount | rupiah }}</td>
+                    <td>{{ b.period }}</td>
+                    <td style="color:var(--text-muted);font-size:13px;">{{ b.created_at }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% set total = budgets | map(attribute='amount') | sum %}
+        <div style="padding:16px 12px; border-top:2px solid var(--border); display:flex; justify-content:space-between; font-weight:700;">
+            <span>Total Budget</span>
+            <span style="color:var(--primary);">{{ total | rupiah }}</span>
+        </div>
+        {% else %}
+        <p style="color:var(--text-muted);text-align:center;padding:40px;">
+            Belum ada budget untuk periode ini.
+        </p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Set Budget Modal -->
+<div class="modal-overlay" id="setBudgetModal">
+    <div class="modal">
+        <h3>Set Budget Kategori</h3>
+        <form method="post" action="{{ url_for('set_budget') }}">
+            <div class="form-group">
+                <label>Kategori</label>
+                <select name="category_id" class="form-control" required>
+                    <option value="">Pilih kategori...</option>
+                    {% for cat in categories %}
+                    <option value="{{ cat.id }}">{{ cat.icon }} {{ cat.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Jumlah Budget (Rp)</label>
+                <input type="number" name="amount" class="form-control" placeholder="0" min="1" required>
+            </div>
+            <div class="form-group">
+                <label>Periode</label>
+                <input type="month" name="period" class="form-control" value="{{ current_period }}" required>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-ghost" onclick="document.getElementById('setBudgetModal').classList.remove('active')">Batal</button>
+                <button type="submit" class="btn btn-primary">Simpan</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

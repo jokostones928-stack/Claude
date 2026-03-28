@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Dashboard Budget</h1>
+    <span class="date">Periode: {{ current_period }}</span>
+</div>
+
+<!-- Summary Cards -->
+<div class="summary-cards">
+    <div class="summary-card total">
+        <div class="label">Total Budget</div>
+        <div class="value">{{ total_budget | rupiah }}</div>
+        <div class="sub">Anggaran bulan ini</div>
+    </div>
+    <div class="summary-card spent">
+        <div class="label">Total Terpakai</div>
+        <div class="value">{{ total_spent | rupiah }}</div>
+        <div class="sub">
+            {% if total_budget > 0 %}
+                {{ "%.1f" | format(total_spent / total_budget * 100) }}% dari budget
+            {% endif %}
+        </div>
+    </div>
+    <div class="summary-card remaining">
+        <div class="label">Sisa Budget</div>
+        <div class="value">{{ total_remaining | rupiah }}</div>
+        <div class="sub">
+            {% if total_remaining < 0 %}
+                ⚠️ Over budget!
+            {% else %}
+                Tersedia untuk digunakan
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Budget Progress per Category -->
+<h2 style="font-size:18px; margin-bottom:16px;">Budget per Kategori</h2>
+<div class="budget-grid">
+    {% for item in summary %}
+    {% set pct = (item.spent_amount / item.budget_amount * 100) if item.budget_amount > 0 else 0 %}
+    {% set remaining = item.budget_amount - item.spent_amount %}
+    <div class="budget-card">
+        <div class="budget-card-header">
+            <span class="cat-name">{{ item.icon }} {{ item.name }}</span>
+            <span class="percentage {% if pct >= 95 %}pct-danger{% elif pct >= 80 %}pct-warning{% else %}pct-safe{% endif %}">
+                {{ "%.1f" | format(pct) }}%
+            </span>
+        </div>
+        <div class="progress-bar">
+            <div class="progress-fill {% if pct >= 95 %}danger{% elif pct >= 80 %}warning{% else %}safe{% endif %}"
+                 style="width: {{ [pct, 100] | min }}%"></div>
+        </div>
+        <div class="budget-card-footer">
+            <span>Terpakai: <strong>{{ item.spent_amount | rupiah }}</strong></span>
+            <span>Budget: <strong>{{ item.budget_amount | rupiah }}</strong></span>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Charts & Recent Transactions -->
+<div class="section-row">
+    <div class="card">
+        <div class="card-header">Transaksi Terakhir</div>
+        <div class="card-body">
+            {% if recent_transactions %}
+            <table class="txn-table">
+                <thead>
+                    <tr>
+                        <th>Tanggal</th>
+                        <th>Kategori</th>
+                        <th>Deskripsi</th>
+                        <th style="text-align:right">Jumlah</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for txn in recent_transactions %}
+                    <tr>
+                        <td>{{ txn.transaction_date }}</td>
+                        <td><span class="txn-category">{{ txn.icon }} {{ txn.category_name }}</span></td>
+                        <td>{{ txn.description }}</td>
+                        <td class="txn-amount" style="text-align:right">{{ txn.amount | rupiah }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p style="color:var(--text-muted);text-align:center;padding:20px;">Belum ada transaksi</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div>
+        <!-- Alerts -->
+        <div class="card" style="margin-bottom:20px;">
+            <div class="card-header">⚡ Status Alert</div>
+            <div class="card-body">
+                <ul class="alert-list">
+                    {% for item in summary %}
+                    {% set pct = (item.spent_amount / item.budget_amount * 100) if item.budget_amount > 0 else 0 %}
+                    {% if pct >= 95 %}
+                    <li class="alert-item danger">🔴 {{ item.name }}: {{ "%.0f" | format(pct) }}% - OVER LIMIT!</li>
+                    {% elif pct >= 80 %}
+                    <li class="alert-item warning">🟡 {{ item.name }}: {{ "%.0f" | format(pct) }}% - Hampir habis</li>
+                    {% endif %}
+                    {% endfor %}
+
+                    {% set has_alert = false %}
+                    {% for item in summary %}
+                    {% set pct = (item.spent_amount / item.budget_amount * 100) if item.budget_amount > 0 else 0 %}
+                    {% if pct >= 80 %}{% set has_alert = true %}{% endif %}
+                    {% endfor %}
+
+                    {% if not has_alert %}
+                    <li class="alert-item safe">🟢 Semua budget dalam kondisi aman</li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+
+        <!-- Trend Chart -->
+        <div class="card">
+            <div class="card-header">📈 Trend Bulanan</div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <canvas id="trendChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const trendData = {{ monthly_trend | map(attribute='total') | list | tojson }};
+    const trendLabels = {{ monthly_trend | map(attribute='month') | list | tojson }};
+
+    new Chart(document.getElementById('trendChart'), {
+        type: 'line',
+        data: {
+            labels: trendLabels,
+            datasets: [{
+                label: 'Pengeluaran',
+                data: trendData,
+                borderColor: '#2563eb',
+                backgroundColor: 'rgba(37,99,235,0.1)',
+                fill: true,
+                tension: 0.4,
+                pointRadius: 5,
+                pointBackgroundColor: '#2563eb',
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: (ctx) => 'Rp ' + ctx.parsed.y.toLocaleString('id-ID')
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: (v) => 'Rp ' + (v / 1000000).toFixed(0) + 'jt'
+                    }
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}
