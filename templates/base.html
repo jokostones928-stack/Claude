@@ -31,6 +31,11 @@
                     <span class="icon">🎯</span> Kelola Budget
                 </a>
             </li>
+            <li>
+                <a href="{{ url_for('gsheet') }}" class="{% if request.endpoint == 'gsheet' %}active{% endif %}">
+                    <span class="icon">📗</span> Google Sheets
+                </a>
+            </li>
         </ul>
     </nav>
 

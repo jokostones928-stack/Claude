@@ -1,8 +1,10 @@
-from flask import Flask, render_template, request, jsonify, redirect, url_for
+from flask import Flask, render_template, request, jsonify, redirect, url_for, flash
 import sqlite3
+import os
 from datetime import datetime, date
 
 app = Flask(__name__)
+app.secret_key = os.environ.get("SECRET_KEY", "finance-app-secret-key-change-me")
 DATABASE = "budget.db"
 
 
@@ -311,6 +313,93 @@ def api_summary():
         }
         for row in summary
     ])
+
+
+def is_gsheet_configured():
+    """Check if Google Sheets credentials and spreadsheet ID are set."""
+    creds_file = os.environ.get("GOOGLE_CREDENTIALS", "credentials.json")
+    spreadsheet_id = os.environ.get("GOOGLE_SPREADSHEET_ID", "")
+    return os.path.exists(creds_file) and bool(spreadsheet_id)
+
+
+@app.route("/gsheet")
+def gsheet():
+    configured = is_gsheet_configured()
+    spreadsheet_id = os.environ.get("GOOGLE_SPREADSHEET_ID", "")
+    return render_template(
+        "gsheet.html",
+        configured=configured,
+        spreadsheet_id=spreadsheet_id,
+    )
+
+
+@app.route("/gsheet/import-transactions", methods=["POST"])
+def gsheet_import_transactions():
+    try:
+        from gsheet_sync import import_transactions_from_sheet
+        result = import_transactions_from_sheet()
+        flash(
+            f"Import transaksi selesai: {result['imported']} baru, {result['skipped']} dilewati. "
+            + (f"Errors: {', '.join(result['errors'])}" if result["errors"] else ""),
+            "success" if not result["errors"] else "warning",
+        )
+    except Exception as e:
+        flash(f"Gagal import: {str(e)}", "danger")
+    return redirect(url_for("gsheet"))
+
+
+@app.route("/gsheet/import-budgets", methods=["POST"])
+def gsheet_import_budgets():
+    try:
+        from gsheet_sync import import_budgets_from_sheet
+        result = import_budgets_from_sheet()
+        flash(
+            f"Import budget selesai: {result['imported']} diproses, {result['skipped']} dilewati. "
+            + (f"Errors: {', '.join(result['errors'])}" if result["errors"] else ""),
+            "success" if not result["errors"] else "warning",
+        )
+    except Exception as e:
+        flash(f"Gagal import: {str(e)}", "danger")
+    return redirect(url_for("gsheet"))
+
+
+@app.route("/gsheet/export-transactions", methods=["POST"])
+def gsheet_export_transactions():
+    try:
+        from gsheet_sync import export_transactions_to_sheet
+        result = export_transactions_to_sheet()
+        flash(f"Export selesai: {result['exported']} transaksi dikirim ke Google Sheet.", "success")
+    except Exception as e:
+        flash(f"Gagal export: {str(e)}", "danger")
+    return redirect(url_for("gsheet"))
+
+
+@app.route("/gsheet/export-summary", methods=["POST"])
+def gsheet_export_summary():
+    try:
+        from gsheet_sync import export_summary_to_sheet
+        result = export_summary_to_sheet()
+        flash(f"Export summary selesai untuk periode {result['period']}.", "success")
+    except Exception as e:
+        flash(f"Gagal export: {str(e)}", "danger")
+    return redirect(url_for("gsheet"))
+
+
+@app.route("/gsheet/sync-all", methods=["POST"])
+def gsheet_sync_all():
+    try:
+        from gsheet_sync import sync_all
+        result = sync_all()
+        txn = result["transactions"]
+        bgt = result["budgets"]
+        flash(
+            f"Sync selesai! Transaksi: {txn['imported']} baru. "
+            f"Budget: {bgt['imported']} diproses. Summary exported.",
+            "success",
+        )
+    except Exception as e:
+        flash(f"Gagal sync: {str(e)}", "danger")
+    return redirect(url_for("gsheet"))
 
 
 if __name__ == "__main__":

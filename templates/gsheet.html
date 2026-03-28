@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+{% block title %}Google Sheets Integration{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>📗 Google Sheets Integration</h1>
+</div>
+
+<!-- Flash Messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+<div style="margin-bottom:20px;">
+    {% for category, message in messages %}
+    <div class="alert-item {{ category }}" style="margin-bottom:8px;">
+        {% if category == 'success' %}✅{% elif category == 'warning' %}⚠️{% else %}❌{% endif %}
+        {{ message }}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+{% endwith %}
+
+<!-- Setup Guide -->
+<div class="card" style="margin-bottom:24px;">
+    <div class="card-header">🔧 Setup Guide</div>
+    <div class="card-body">
+        {% if configured %}
+        <div class="alert-item safe" style="margin-bottom:16px;">
+            🟢 Google Sheets sudah terkonfigurasi!
+            {% if spreadsheet_id %}
+            <br><small>Spreadsheet ID: {{ spreadsheet_id[:20] }}...</small>
+            {% endif %}
+        </div>
+        {% else %}
+        <div class="alert-item warning" style="margin-bottom:16px;">
+            🟡 Belum dikonfigurasi. Ikuti langkah di bawah:
+        </div>
+        {% endif %}
+
+        <div style="font-size:14px; line-height:1.8;">
+            <strong>Langkah Setup:</strong>
+            <ol style="padding-left:20px; margin-top:8px;">
+                <li>Buka <strong>Google Cloud Console</strong> → APIs & Services</li>
+                <li>Enable <strong>Google Sheets API</strong> dan <strong>Google Drive API</strong></li>
+                <li>Buat <strong>Service Account</strong> → Download JSON key</li>
+                <li>Simpan file JSON sebagai <code>credentials.json</code> di folder project</li>
+                <li>Buat Google Spreadsheet baru, lalu <strong>Share</strong> ke email service account</li>
+                <li>Set environment variable:
+                    <pre style="background:#f1f5f9; padding:12px; border-radius:8px; margin:8px 0; font-size:13px;">export GOOGLE_CREDENTIALS="credentials.json"
+export GOOGLE_SPREADSHEET_ID="your-spreadsheet-id-here"</pre>
+                </li>
+            </ol>
+
+            <strong style="display:block; margin-top:16px;">Format Spreadsheet:</strong>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:8px;">
+                <div style="background:#f8fafc; padding:14px; border-radius:8px; border:1px solid var(--border);">
+                    <strong>Sheet "Transaksi"</strong>
+                    <table class="txn-table" style="margin-top:8px;">
+                        <thead>
+                            <tr>
+                                <th>Tanggal</th>
+                                <th>Kategori</th>
+                                <th>Deskripsi</th>
+                                <th>Jumlah</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><small>28/03/2026</small></td>
+                                <td><small>Marketing</small></td>
+                                <td><small>Google Ads</small></td>
+                                <td><small>5000000</small></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div style="background:#f8fafc; padding:14px; border-radius:8px; border:1px solid var(--border);">
+                    <strong>Sheet "Budget"</strong>
+                    <table class="txn-table" style="margin-top:8px;">
+                        <thead>
+                            <tr>
+                                <th>Kategori</th>
+                                <th>Budget</th>
+                                <th>Periode</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><small>Marketing</small></td>
+                                <td><small>30000000</small></td>
+                                <td><small>2026-03</small></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Sync Actions -->
+<div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px; margin-bottom:24px;">
+    <!-- Import Section -->
+    <div class="card">
+        <div class="card-header">⬇️ Import dari Google Sheets</div>
+        <div class="card-body">
+            <p style="font-size:14px; color:var(--text-muted); margin-bottom:16px;">
+                Tarik data dari spreadsheet ke aplikasi. Data duplikat otomatis dilewati.
+            </p>
+            <div style="display:flex; flex-direction:column; gap:10px;">
+                <form method="post" action="{{ url_for('gsheet_import_transactions') }}">
+                    <button type="submit" class="btn btn-primary" style="width:100%;" {% if not configured %}disabled{% endif %}>
+                        💳 Import Transaksi
+                    </button>
+                </form>
+                <form method="post" action="{{ url_for('gsheet_import_budgets') }}">
+                    <button type="submit" class="btn btn-primary" style="width:100%;" {% if not configured %}disabled{% endif %}>
+                        🎯 Import Budget
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Export Section -->
+    <div class="card">
+        <div class="card-header">⬆️ Export ke Google Sheets</div>
+        <div class="card-body">
+            <p style="font-size:14px; color:var(--text-muted); margin-bottom:16px;">
+                Kirim data dari aplikasi ke spreadsheet. Data di sheet akan di-overwrite.
+            </p>
+            <div style="display:flex; flex-direction:column; gap:10px;">
+                <form method="post" action="{{ url_for('gsheet_export_transactions') }}">
+                    <button type="submit" class="btn btn-primary" style="width:100%;" {% if not configured %}disabled{% endif %}>
+                        💳 Export Transaksi
+                    </button>
+                </form>
+                <form method="post" action="{{ url_for('gsheet_export_summary') }}">
+                    <button type="submit" class="btn btn-primary" style="width:100%;" {% if not configured %}disabled{% endif %}>
+                        📊 Export Summary Dashboard
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Full Sync -->
+<div class="card">
+    <div class="card-header">🔄 Full Sync</div>
+    <div class="card-body" style="display:flex; align-items:center; justify-content:space-between;">
+        <div>
+            <p style="font-weight:600;">Sinkronisasi Lengkap</p>
+            <p style="font-size:14px; color:var(--text-muted);">
+                Import transaksi & budget dari Sheet, lalu export summary kembali ke Sheet.
+            </p>
+        </div>
+        <form method="post" action="{{ url_for('gsheet_sync_all') }}">
+            <button type="submit" class="btn btn-primary" style="padding:14px 32px; font-size:16px;" {% if not configured %}disabled{% endif %}>
+                🔄 Sync Sekarang
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}
