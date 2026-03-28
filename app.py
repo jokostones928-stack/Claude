@@ -420,6 +420,22 @@ def gsheet_setup():
     return redirect(url_for("gsheet"))
 
 
+@app.route("/gsheet/setup-appsheet", methods=["POST"])
+def gsheet_setup_appsheet():
+    try:
+        from appsheet_template.generate_appsheet_template import setup_all
+        setup_all()
+        flash(
+            "AppSheet template selesai! 7 sheets dibuat: Divisions, Categories, Employees, "
+            "Budgets, Transactions, Approvals, Dashboard_Data. "
+            "Sekarang buka AppSheet → Create App → pilih spreadsheet ini.",
+            "success",
+        )
+    except Exception as e:
+        flash(f"Gagal setup AppSheet: {str(e)}", "danger")
+    return redirect(url_for("gsheet"))
+
+
 if __name__ == "__main__":
     init_db()
     app.run(debug=True, host="0.0.0.0", port=5000)
