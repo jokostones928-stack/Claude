@@ -5,7 +5,7 @@ const { chromium } = require('playwright');
 const { spawn, execFileSync } = require('child_process');
 const fs = require('fs'), path = require('path');
 
-const args = Object.fromEntries(process.argv.slice(2).reduce((a, v, i, arr) => (v.startsWith('--') ? a.concat([[v.slice(2), arr[i + 1]]]) : a), []));
+const args = Object.fromEntries(process.argv.slice(2).reduce((a, v, i, arr) => (v.startsWith('--') ? a.concat([[v.slice(2), arr[i + 1] && !arr[i + 1].startsWith('--') ? arr[i + 1] : '1']]) : a), []));
 const FPS = +(args.fps || 30), WORKERS = +(args.workers || 4);
 const DIR = __dirname, BUILD = path.join(DIR, 'build');
 
@@ -61,7 +61,8 @@ async function worker(browser, idx, f0, f1, seg) {
   if (args.still) return stills(args.still.split(',').map(Number));
   const from = +(args.from || 0), to = Math.min(+(args.to || TOTAL), TOTAL);
   const F0 = Math.round(from * FPS), F1 = Math.round(to * FPS);
-  const segDir = path.join(BUILD, 'segments'); fs.rmSync(segDir, { recursive: true, force: true }); fs.mkdirSync(segDir, { recursive: true });
+  const segDir = path.join(BUILD, 'segments'); if (args.mux === undefined) { fs.rmSync(segDir, { recursive: true, force: true }); fs.mkdirSync(segDir, { recursive: true }); }
+  if (args.mux === undefined) {
   const browser = await chromium.launch();
   const per = Math.ceil((F1 - F0) / WORKERS), jobs = [], segs = [];
   for (let w = 0; w < WORKERS; w++) {
@@ -72,12 +73,13 @@ async function worker(browser, idx, f0, f1, seg) {
   await Promise.all(jobs);
   await browser.close();
   fs.writeFileSync(path.join(segDir, 'list.txt'), segs.map(s => `file '${s}'`).join('\n'));
+  }
   const out = args.out || path.join(DIR, 'Thrivers_Book_Summary.mp4');
   const dur = (F1 - F0) / FPS;
   execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-f', 'concat', '-safe', '0', '-i', path.join(segDir, 'list.txt'),
     '-ss', String(from), '-t', String(dur), '-i', path.join(BUILD, 'narration.wav'),
     '-ss', String(from), '-t', String(dur), '-i', path.join(BUILD, 'music.wav'),
-    '-filter_complex', '[1:a]aresample=48000,volume=1.0[v];[2:a]aresample=48000,volume=0.16[m];[m][v]sidechaincompress=threshold=0.05:ratio=4:attack=40:release=600[md];[v][md]amix=inputs=2:normalize=0,alimiter=limit=0.95[a]',
+    '-filter_complex', '[1:a]aresample=48000,aformat=channel_layouts=stereo,asplit=2[v][vk];[2:a]aresample=48000,aformat=channel_layouts=stereo,volume=0.16[m];[m][vk]sidechaincompress=threshold=0.05:ratio=4:attack=40:release=600[md];[v][md]amix=inputs=2:normalize=0,loudnorm=I=-16:TP=-1.5:LRA=11,aresample=48000[a]',
     '-map', '0:v', '-map', '[a]', '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-movflags', '+faststart', '-shortest', out], { stdio: 'inherit' });
   console.log('wrote', out);
 })();
