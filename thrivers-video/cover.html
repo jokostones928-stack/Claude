@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Thrivers Reels Cover</title>
+<style>
+@font-face { font-family: "Fraunces"; src: url(assets/fonts/Fraunces.woff2) format("woff2"); font-weight: 100 900; font-style: normal; font-display: block; }
+@font-face { font-family: "Fraunces"; src: url(assets/fonts/Fraunces-Italic.woff2) format("woff2"); font-weight: 100 900; font-style: italic; font-display: block; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 1080px; height: 1920px; overflow: hidden; }
+body { font-family: "Inter", sans-serif; color: #f6f1e9; background: radial-gradient(ellipse at 50% 42%, #2a2140 0%, #0d1020 55%, #07090f 100%); -webkit-font-smoothing: antialiased; position: relative; }
+.glow { position: absolute; border-radius: 50%; }
+.g1 { left: -300px; top: 250px; width: 1100px; height: 1100px; background: radial-gradient(circle, rgba(244,162,97,.35), transparent 62%); }
+.g2 { right: -380px; top: 900px; width: 1100px; height: 1100px; background: radial-gradient(circle, rgba(76,201,240,.22), transparent 62%); }
+.dots { position: absolute; inset: 0; opacity: .06; background-image: radial-gradient(#fff 1.2px, transparent 1.2px); background-size: 44px 44px; }
+/* everything important sits inside the 1080x1440 centre (profile-grid crop) */
+.wrap { position: absolute; left: 0; right: 0; top: 240px; height: 1440px; display: flex; flex-direction: column; align-items: center; }
+.kick { margin-top: 40px; font-size: 30px; font-weight: 800; letter-spacing: .34em; color: #f4a261; display: flex; align-items: center; gap: 16px; }
+.kick span { width: 60px; height: 3px; background: #f4a261; }
+.hook { margin-top: 26px; font-family: "Fraunces", serif; font-size: 92px; font-weight: 800; line-height: 1.02; text-align: center; letter-spacing: -.01em; }
+.hook em { font-style: italic; color: #f4a261; font-weight: 700; }
+/* book mockup (original illustration) */
+.scene3d { margin-top: 64px; perspective: 1800px; }
+.book { position: relative; width: 470px; height: 680px; transform: rotateY(-24deg) rotateX(4deg); transform-style: preserve-3d; }
+.front { position: absolute; inset: 0; border-radius: 6px 18px 18px 6px; overflow: hidden; background: linear-gradient(160deg, #f7b27a 0%, #ec8a52 45%, #b9552e 100%); box-shadow: 40px 50px 90px rgba(0,0,0,.6), inset 6px 0 10px rgba(0,0,0,.18); padding: 60px 46px; display: flex; flex-direction: column; color: #241307; }
+.front::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 22px; background: linear-gradient(90deg, rgba(0,0,0,.28), rgba(255,255,255,.12), transparent); }
+.sun { position: absolute; right: -150px; bottom: -150px; width: 520px; height: 520px; border-radius: 50%; border: 3px solid rgba(255,255,255,.35); }
+.sun.s2 { right: -80px; bottom: -80px; width: 380px; height: 380px; }
+.sun.s3 { right: -10px; bottom: -10px; width: 240px; height: 240px; background: rgba(255,255,255,.22); border: 0; }
+.f-k { font-size: 20px; font-weight: 800; letter-spacing: .3em; opacity: .75; }
+.f-t { font-family: "Fraunces", serif; font-size: 112px; font-weight: 800; line-height: .95; margin-top: 30px; letter-spacing: -.02em; }
+.f-s { font-family: "Fraunces", serif; font-style: italic; font-size: 30px; line-height: 1.2; margin-top: 24px; max-width: 360px; }
+.f-a { margin-top: auto; font-size: 28px; font-weight: 800; letter-spacing: .06em; position: relative; }
+.pages { position: absolute; top: 10px; bottom: 10px; right: -26px; width: 28px; transform: rotateY(90deg); transform-origin: left; background: repeating-linear-gradient(90deg, #f3ecdf 0 2px, #d9d0c0 2px 3px); }
+.shadow { width: 520px; height: 50px; margin-top: -10px; background: radial-gradient(ellipse, rgba(0,0,0,.6), transparent 70%); }
+.pills { margin-top: 40px; display: flex; gap: 16px; }
+.pills div { font-size: 30px; font-weight: 700; padding: 14px 30px; border-radius: 999px; border: 2px solid rgba(255,255,255,.25); background: rgba(255,255,255,.06); }
+.pills div b { color: #f4a261; }
+.tag { position: absolute; bottom: 150px; left: 0; right: 0; text-align: center; font-size: 30px; font-weight: 700; letter-spacing: .2em; color: rgba(255,255,255,.55); }
+</style>
+</head>
+<body>
+<div class="glow g1"></div><div class="glow g2"></div><div class="dots"></div>
+<div class="wrap">
+  <div class="kick"><span></span>BOOK SUMMARY<span></span></div>
+  <div class="hook">Why straight-A kids<br><em>fall apart</em></div>
+  <div class="scene3d"><div class="book">
+    <div class="front">
+      <div class="sun"></div><div class="sun s2"></div><div class="sun s3"></div>
+      <div class="f-k">MICHELE BORBA, ED.D.</div>
+      <div class="f-t">Thrivers</div>
+      <div class="f-s">Why some kids struggle and others shine</div>
+      <div class="f-a">7 STRENGTHS</div>
+    </div>
+    <div class="pages"></div>
+  </div></div>
+  <div class="shadow"></div>
+  <div class="pills"><div><b>7</b> strengths</div><div><b>1</b> min</div><div>for parents</div></div>
+</div>
+<div class="tag">MICHELE BORBA · 2021</div>
+</body>
+</html>
