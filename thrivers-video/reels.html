@@ -1,0 +1,252 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Thrivers Reels</title>
+<style>
+@font-face { font-family: "Fraunces"; src: url(assets/fonts/Fraunces.woff2) format("woff2"); font-weight: 100 900; font-style: normal; font-display: block; }
+@font-face { font-family: "Fraunces"; src: url(assets/fonts/Fraunces-Italic.woff2) format("woff2"); font-weight: 100 900; font-style: italic; font-display: block; }
+:root { --accent: #f4a261; --ink: #f6f1e9; --muted: #a9b0c3; --card: rgba(255,255,255,0.06); --line: rgba(255,255,255,0.13); }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 1080px; height: 1920px; overflow: hidden; background: #0a0d18; }
+body { font-family: "Inter", sans-serif; color: var(--ink); -webkit-font-smoothing: antialiased; }
+#stage { position: absolute; inset: 0; overflow: hidden; }
+#bg { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 35%, #161c33 0%, #0a0d18 70%); }
+.blob { position: absolute; left: 0; top: 0; width: 1400px; height: 1400px; border-radius: 50%; margin: -700px 0 0 -700px; opacity: .34; }
+#grain { position: absolute; inset: 0; opacity: .05; background-image: radial-gradient(rgba(255,255,255,.9) 1px, transparent 1px); background-size: 44px 44px; }
+#vignette { position: absolute; inset: 0; background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,.6) 100%); }
+.pt { position: absolute; border-radius: 50%; background: #fff; }
+#brand { position: absolute; top: 120px; left: 0; right: 0; display: flex; justify-content: center; align-items: center; gap: 14px; font-size: 26px; letter-spacing: .34em; font-weight: 700; color: rgba(255,255,255,.8); }
+#brand .dot { width: 12px; height: 12px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 18px var(--accent); }
+#bars { position: absolute; top: 80px; left: 70px; right: 70px; display: flex; gap: 8px; }
+#bars div { flex: 1; height: 5px; border-radius: 5px; background: rgba(255,255,255,.15); overflow: hidden; }
+#bars div i { display: block; height: 100%; width: 0; background: var(--accent); }
+#cap { position: absolute; left: 70px; right: 70px; top: 1410px; text-align: center; font-size: 64px; font-weight: 900; line-height: 1.12; letter-spacing: -.01em; text-transform: uppercase; }
+#cap span { display: inline-block; margin: 0 .2em; color: #fff; text-shadow: 0 4px 0 rgba(0,0,0,.55), 0 0 30px rgba(0,0,0,.6); }
+#cap span.on { color: var(--accent); transform: scale(1.08); }
+
+.scene { position: absolute; inset: 0; display: none; }
+.a { will-change: transform, opacity; }
+em { font-style: italic; color: var(--accent); }
+b { color: var(--accent); }
+.icon svg { display: block; }
+.kick { font-size: 28px; letter-spacing: .3em; text-transform: uppercase; font-weight: 800; color: var(--accent); text-align: center; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 36px; }
+.zone { position: absolute; left: 70px; right: 70px; top: 230px; height: 1130px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+
+/* hook */
+.hk1 { font-family: "Fraunces", serif; font-size: 150px; font-weight: 800; line-height: 1; }
+.hk-grade { margin: 30px 0 40px; display: flex; gap: 20px; }
+.hk-grade div { width: 130px; height: 150px; border-radius: 24px; display: grid; place-items: center; font-family: "Fraunces", serif; font-weight: 800; font-size: 100px; background: rgba(255,255,255,.08); border: 2px solid var(--line); }
+.hk2 { font-family: "Fraunces", serif; font-size: 84px; font-weight: 600; line-height: 1.1; }
+.book { margin-top: 70px; display: flex; align-items: center; gap: 30px; padding: 30px 44px; border-radius: 30px; background: rgba(255,255,255,.07); border: 1px solid var(--line); }
+.book .cover { width: 120px; height: 170px; border-radius: 8px 16px 16px 8px; background: linear-gradient(150deg, var(--accent), #8a4b2a); display: grid; place-items: center; font-family: "Fraunces", serif; font-weight: 800; font-size: 17px; letter-spacing: .04em; color: #1a1209; box-shadow: 0 20px 40px rgba(0,0,0,.5); }
+.book .t { text-align: left; }
+.book .t div:first-child { font-family: "Fraunces", serif; font-size: 64px; font-weight: 800; }
+.book .t div:last-child { font-size: 30px; color: var(--muted); margin-top: 6px; }
+
+/* vs */
+.vs-card { width: 100%; padding: 44px 54px; text-align: left; }
+.vs-card h3 { font-family: "Fraunces", serif; font-size: 90px; font-weight: 800; display: flex; align-items: center; gap: 24px; margin-bottom: 18px; }
+.vs-it { display: flex; align-items: center; gap: 22px; font-size: 44px; padding: 14px 0; font-weight: 500; }
+.vs-it .icon { flex: none; width: 58px; height: 58px; border-radius: 50%; display: grid; place-items: center; }
+.vs-mid { font-family: "Fraunces", serif; font-style: italic; font-size: 60px; color: var(--accent); margin: 26px 0; font-weight: 700; }
+
+/* seven */
+.big7 { font-family: "Fraunces", serif; font-size: 360px; font-weight: 800; line-height: .8; color: transparent; -webkit-text-stroke: 4px var(--accent); }
+.s-sub { font-family: "Fraunces", serif; font-size: 60px; font-weight: 600; margin: 20px 0 50px; }
+.s-list { display: flex; flex-wrap: wrap; justify-content: center; gap: 22px; }
+.s-pill { font-size: 46px; font-weight: 700; padding: 22px 40px; border-radius: 999px; border: 3px solid; background: rgba(255,255,255,.04); }
+
+/* multi */
+.mx { font-family: "Fraunces", serif; font-size: 250px; font-weight: 300; color: var(--accent); line-height: .8; }
+.eq { width: 100%; padding: 44px 40px; margin-top: 44px; display: flex; flex-direction: column; align-items: center; gap: 18px; }
+.eq .row { display: flex; align-items: center; gap: 20px; }
+.eq .p { font-size: 46px; font-weight: 700; padding: 16px 32px; border-radius: 999px; background: rgba(255,255,255,.08); }
+.eq .r { font-family: "Fraunces", serif; font-size: 84px; font-weight: 800; color: var(--accent); line-height: 1.05; }
+
+/* tips */
+.tip { width: 100%; display: flex; align-items: center; gap: 36px; padding: 40px 44px; margin-top: 30px; text-align: left; }
+.tip .ic { flex: none; width: 130px; height: 130px; border-radius: 34px; display: grid; place-items: center; background: color-mix(in srgb, var(--accent) 22%, transparent); }
+.tip .tx { font-family: "Fraunces", serif; font-size: 62px; font-weight: 600; line-height: 1.1; }
+.tonight { font-family: "Fraunces", serif; font-size: 120px; font-weight: 800; margin-bottom: 30px; }
+
+/* quote */
+.qm { font-family: "Fraunces", serif; font-size: 400px; line-height: .6; height: 190px; color: var(--accent); }
+.qt { font-family: "Fraunces", serif; font-style: italic; font-size: 112px; line-height: 1.12; font-weight: 500; }
+.qa { margin-top: 50px; font-size: 32px; letter-spacing: .2em; color: var(--muted); text-transform: uppercase; font-weight: 700; }
+
+/* cta */
+.cta-t { font-family: "Fraunces", serif; font-size: 200px; font-weight: 800; line-height: 1; }
+.cta-a { font-size: 40px; font-weight: 600; margin-top: 20px; }
+.cta-r { margin-top: 70px; font-family: "Fraunces", serif; font-size: 76px; font-weight: 600; line-height: 1.15; }
+.strike { position: relative; display: inline-block; color: var(--muted); }
+.strike::after { content: ""; position: absolute; left: -4%; top: 55%; height: 8px; width: calc(108% * var(--s, 0)); background: #ef476f; border-radius: 4px; }
+.cta-btns { display: flex; gap: 30px; margin-top: 80px; }
+.cta-btns div { display: flex; align-items: center; gap: 18px; padding: 26px 46px; border-radius: 999px; font-size: 42px; font-weight: 800; background: var(--accent); color: #1a1209; }
+.cta-btns div.o { background: transparent; color: var(--ink); border: 3px solid var(--accent); }
+</style>
+<script src="build-reels/data.js"></script>
+<script src="build-reels/icons.js"></script>
+</head>
+<body>
+<div id="stage">
+  <div id="bg"><div class="blob" id="b1"></div><div class="blob" id="b2"></div><div class="blob" id="b3"></div><div id="grain"></div><div id="pts"></div><div id="vignette"></div></div>
+  <div id="scenes"></div>
+  <div id="bars"></div>
+  <div id="brand"><span class="dot"></span>THRIVERS</div>
+  <div id="cap"></div>
+</div>
+<script>
+const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
+const lerp = (a, b, t) => a + (b - a) * t;
+const ease = {
+  out: t => 1 - Math.pow(1 - t, 3),
+  inout: t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2,
+  back: t => { const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2); },
+};
+function hex2rgb(h) { h = h.replace('#', ''); return [0, 2, 4].map(i => parseInt(h.substr(i, 2), 16)); }
+function mix(c1, c2, t) { const a = hex2rgb(c1), b = hex2rgb(c2); return 'rgb(' + a.map((v, i) => Math.round(lerp(v, b[i], t))).join(',') + ')'; }
+function icon(name, size = 40, color = 'currentColor', sw = 2) {
+  return `<span class="icon">${(ICONS[name] || '').replace('<svg', `<svg width="${size}" height="${size}" style="color:${color}"`).replace(/stroke-width="2"/, `stroke-width="${sw}"`)}</span>`;
+}
+function h(html) { const d = document.createElement('div'); d.innerHTML = html.trim(); return d.firstElementChild; }
+
+const anims = [];
+function reg(si, el, t0, kind = 'up', o = {}) { el.classList.add('a'); anims[si].push({ el, t0, kind, dur: o.dur || 0.6, dim: o.dim, dimTo: o.dimTo ?? 0.4, dist: o.dist || 60 }); }
+function applyAnim(a, lt) {
+  const p = clamp((lt - a.t0) / a.dur);
+  let op = 1, tx = 0, ty = 0, sc = 1, blur = 0;
+  switch (a.kind) {
+    case 'up': { const e = ease.out(p); op = e; ty = (1 - e) * a.dist; break; }
+    case 'left': { const e = ease.out(p); op = e; tx = -(1 - e) * 100; break; }
+    case 'right': { const e = ease.out(p); op = e; tx = (1 - e) * 100; break; }
+    case 'pop': { op = clamp(p * 2.5); sc = p <= 0 ? .4 : lerp(.4, 1, ease.back(p)); break; }
+    case 'slam': { op = clamp(p * 3); sc = lerp(1.8, 1, ease.out(p)); blur = (1 - ease.out(p)) * 16; break; }
+    case 'blur': { const e = ease.out(p); op = e; blur = (1 - e) * 16; ty = (1 - e) * 30; break; }
+    case 'strike': a.el.style.setProperty('--s', ease.inout(p)); return;
+  }
+  if (a.dim !== undefined && lt > a.dim) op *= lerp(1, a.dimTo, ease.inout(clamp((lt - a.dim) / 0.5)));
+  const st = a.el.style;
+  st.opacity = op.toFixed(4);
+  st.transform = `translate(${tx.toFixed(2)}px,${ty.toFixed(2)}px) scale(${sc.toFixed(4)})`;
+  st.filter = blur > 0.05 ? `blur(${blur.toFixed(2)}px)` : 'none';
+}
+
+const C = (sc, i) => TIMING[sc._i].cues[i].start;
+const CD = (sc, i) => TIMING[sc._i].cues[i].dur;
+// approximate the moment a word is spoken, from its character position in the cue text
+function WT(sc, cue, word) { const txt = sc.cues[cue]; const k = txt.toLowerCase().indexOf(word.toLowerCase()); return C(sc, cue) + CD(sc, cue) * (Math.max(0, k) / txt.length); }
+
+const B = {};
+B.hook = (sc, el) => {
+  const i = sc._i, d = sc.data, z = h(`<div class="zone"></div>`); el.append(z);
+  const g = h(`<div class="hk-grade"><div>A</div><div>A</div><div>A</div></div>`); z.append(g);
+  [...g.children].forEach((c, k) => reg(i, c, 0.05 + k * 0.12, 'slam', { dur: 0.45 }));
+  const l1 = h(`<div class="hk1">${d.line1}</div>`); z.append(l1); reg(i, l1, 0.4, 'blur');
+  const l2 = h(`<div class="hk2" style="margin-top:40px">${d.line2}</div>`); z.append(l2); reg(i, l2, WT(sc, 0, 'so why') - 0.1, 'blur');
+  const bk = h(`<div class="book"><div class="cover">THRIVERS</div><div class="t"><div>Thrivers</div><div>Michele Borba, Ed.D. · 2021</div></div></div>`); z.append(bk); reg(i, bk, C(sc, 1) - 0.1, 'pop');
+};
+B.vs = (sc, el) => {
+  const i = sc._i, d = sc.data, z = h(`<div class="zone"></div>`); el.append(z);
+  const L = h(`<div class="card vs-card"><h3 style="color:#c9cbd6">${icon('trophy', 76, '#ef476f')}${d.left.title}</h3></div>`); z.append(L); reg(i, L, 0, 'left', { dim: C(sc, 1) - 0.1, dimTo: 0.45 });
+  d.left.items.forEach((t, k) => { const it = h(`<div class="vs-it">${icon('x', 32, '#ef476f', 3)}<span>${t}</span></div>`); it.firstChild.style.background = 'rgba(239,71,111,.2)'; L.append(it); reg(i, it, C(sc, 0) + CD(sc, 0) * k / 3.2, 'up', { dist: 30 }); });
+  const m = h(`<div class="vs-mid">vs</div>`); z.append(m); reg(i, m, C(sc, 1) - 0.3, 'pop');
+  const R = h(`<div class="card vs-card" style="border-color:#90be6d77;background:rgba(144,190,109,.1)"><h3 style="color:var(--accent)">${icon('sprout', 76, '#90be6d')}${d.right.title}</h3></div>`); z.append(R); reg(i, R, C(sc, 1) - 0.1, 'right');
+  d.right.items.forEach((t, k) => { const it = h(`<div class="vs-it">${icon('check', 32, '#90be6d', 3)}<span>${t}</span></div>`); it.firstChild.style.background = 'rgba(144,190,109,.25)'; R.append(it); reg(i, it, C(sc, 1) + 0.3 + CD(sc, 1) * k / 3.2, 'up', { dist: 30 }); });
+};
+B.seven = (sc, el) => {
+  const i = sc._i, d = sc.data, z = h(`<div class="zone"></div>`); el.append(z);
+  const n = h(`<div class="big7">7</div>`); z.append(n); reg(i, n, WT(sc, 0, 'seven') - 0.1, 'slam', { dur: 0.6 });
+  const s = h(`<div class="s-sub">character strengths<br><em>all teachable</em></div>`); z.append(s); reg(i, s, WT(sc, 0, 'character'), 'blur');
+  const L = h(`<div class="s-list"></div>`); z.append(L);
+  d.items.forEach(([w, label, col]) => { const p = h(`<div class="s-pill" style="border-color:${col};color:${col}">${label}</div>`); L.append(p); reg(i, p, WT(sc, 1, w) - 0.05, 'pop', { dur: 0.45 }); });
+};
+B.multi = (sc, el) => {
+  const i = sc._i, d = sc.data, z = h(`<div class="zone"></div>`); el.append(z);
+  const x = h(`<div class="mx">×</div>`); z.append(x); reg(i, x, 0, 'slam', { dur: 0.6 });
+  const k = h(`<div class="kick" style="margin-top:30px">The Multiplier Effect</div>`); z.append(k); reg(i, k, 0.3, 'up');
+  d.eqs.forEach(q => {
+    const c = h(`<div class="card eq"><div class="row"><span class="p">${q.a}</span>${icon('plus', 50, 'var(--accent)', 3)}<span class="p">${q.b}</span></div>${icon('equal', 56, 'var(--accent)', 3)}<div class="r">${q.r}</div></div>`);
+    z.append(c); reg(i, c, C(sc, q.cue) - 0.1, 'up');
+    reg(i, c.querySelector('.r'), WT(sc, q.cue, 'equals') + 0.25, 'slam', { dur: 0.5 });
+  });
+};
+B.tips = (sc, el) => {
+  const i = sc._i, d = sc.data, z = h(`<div class="zone"></div>`); el.append(z);
+  const t = h(`<div class="tonight">Start <em>tonight.</em></div>`); z.append(t); reg(i, t, 0, 'blur');
+  d.tips.forEach(([w, ic, tx]) => { const c = h(`<div class="card tip"><div class="ic">${icon(ic, 70, 'var(--accent)')}</div><div class="tx">${tx}</div></div>`); z.append(c); reg(i, c, WT(sc, 1, w) - 0.5, 'left'); });
+};
+B.quote = (sc, el) => {
+  const i = sc._i, d = sc.data, z = h(`<div class="zone"></div>`); el.append(z);
+  const q = h(`<div class="qm">“</div>`); z.append(q); reg(i, q, 0, 'pop');
+  const t = h(`<div class="qt">${d.html}</div>`); z.append(t); reg(i, t, 0.2, 'blur', { dur: 1 });
+  const a = h(`<div class="qa">— Thrivers</div>`); z.append(a); reg(i, a, 2.5, 'up');
+};
+B.cta = (sc, el) => {
+  const i = sc._i, d = sc.data, z = h(`<div class="zone"></div>`); el.append(z);
+  const t = h(`<div class="cta-t">${d.title}</div>`); z.append(t); reg(i, t, 0, 'slam');
+  const a = h(`<div class="cta-a">${d.author}</div>`); z.append(a); reg(i, a, 0.3, 'up');
+  const r = h(`<div class="cta-r">Raise a <b>Thriver</b>,<br>not just a <span class="strike">Striver</span>.</div>`); z.append(r); reg(i, r, 0.5, 'blur');
+  anims[i].push({ el: r.querySelector('.strike'), t0: WT(sc, 0, 'striver') + 0.3, kind: 'strike', dur: 0.5 });
+  const bt = h(`<div class="cta-btns"><div>${icon('bookmark', 44, '#1a1209', 2.5)}Save</div><div class="o">${icon('send', 44, 'var(--accent)', 2.5)}Share</div></div>`); z.append(bt);
+  reg(i, bt.children[0], WT(sc, 0, 'save') - 0.1, 'pop'); reg(i, bt.children[1], WT(sc, 0, 'share') - 0.1, 'pop');
+};
+
+// build
+const scenesEl = document.getElementById('scenes'), sceneEls = [];
+SCENES.forEach((sc, i) => { sc._i = i; anims.push([]); const el = document.createElement('div'); el.className = 'scene'; scenesEl.append(el); B[sc.type](sc, el); sceneEls.push(el); });
+const barsEl = document.getElementById('bars'); const bars = SCENES.map(() => { const d = h('<div><i></i></div>'); barsEl.append(d); return d.firstChild; });
+
+// captions: chunks of up to 3 words, word timing estimated from character position
+const caps = SCENES.map((sc, i) => sc.cues.map((txt, c) => {
+  const ws = []; let pos = 0;
+  txt.split(/\s+/).forEach(w => { const k = txt.indexOf(w, pos); pos = k + w.length; ws.push({ w, t: C(sc, c) + CD(sc, c) * k / txt.length }); });
+  const chunks = []; let cur = [];
+  ws.forEach(x => { cur.push(x); if (cur.length >= 3 || /[.,?!]$/.test(x.w)) { chunks.push(cur); cur = []; } });
+  if (cur.length) chunks.push(cur);
+  return { chunks, end: C(sc, c) + CD(sc, c) };
+}));
+const capEl = document.getElementById('cap'); let capKey = '';
+function renderCaption(k, lt) {
+  let html = '', key = '';
+  for (const cue of caps[k]) {
+    if (lt < cue.chunks[0][0].t - 0.05 || lt > cue.end + 0.15) continue;
+    let ci = 0; cue.chunks.forEach((ch, j) => { if (lt >= ch[0].t - 0.05) ci = j; });
+    const ch = cue.chunks[ci]; let wi = 0; ch.forEach((x, j) => { if (lt >= x.t - 0.05) wi = j; });
+    key = k + '-' + ci + '-' + wi + cue.end;
+    html = ch.map((x, j) => `<span class="${j === wi ? 'on' : ''}">${x.w.replace(/[.,]$/, '')}</span>`).join('');
+  }
+  if (key !== capKey) { capEl.innerHTML = html; capKey = key; }
+}
+
+let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+const pts = []; const ptsEl = document.getElementById('pts');
+for (let k = 0; k < 60; k++) { const d = document.createElement('div'); d.className = 'pt'; const s = 2 + rnd() * 5; d.style.width = d.style.height = s + 'px'; ptsEl.append(d); pts.push({ d, x: rnd() * 1080, y: rnd() * 1920, v: 12 + rnd() * 30, a: .1 + rnd() * .35, ph: rnd() * 6.28 }); }
+const blobs = ['b1', 'b2', 'b3'].map(id => document.getElementById(id));
+
+window.renderAt = function (t) {
+  let k = 0; for (let j = 0; j < TIMING.length; j++) if (t >= TIMING[j].start) k = j;
+  const T = TIMING[k], sc = SCENES[k], lt = t - T.start;
+  const acc = mix(SCENES[Math.max(0, k - 1)].accent, sc.accent, ease.inout(clamp(lt / 0.6)));
+  document.documentElement.style.setProperty('--accent', acc);
+  blobs.forEach((b, j) => {
+    const x = 540 + Math.sin(t * 0.15 + j * 2.1) * 420, y = 900 + Math.cos(t * 0.11 + j * 1.7) * 700;
+    b.style.transform = `translate(${x}px,${y}px)`;
+    b.style.background = `radial-gradient(circle, ${j === 1 ? '#3a2d6b' : acc} 0%, transparent 62%)`;
+  });
+  pts.forEach(p => { const y = ((p.y - t * p.v) % 2020 + 2020) % 2020 - 50; p.d.style.transform = `translate(${p.x + Math.sin(t * .4 + p.ph) * 30}px,${y}px)`; p.d.style.opacity = p.a; });
+  sceneEls.forEach((el, j) => el.style.display = j === k ? 'block' : 'none');
+  const el = sceneEls[k];
+  const fin = ease.out(clamp(lt / 0.3)), fout = ease.inout(clamp((lt - (T.dur - 0.3)) / 0.3));
+  el.style.opacity = (fin * (1 - fout)).toFixed(3);
+  el.style.transform = `scale(${(1 + 0.03 * lt / T.dur + 0.05 * fout).toFixed(4)})`;
+  anims[k].forEach(a => applyAnim(a, lt));
+  bars.forEach((b, j) => b.style.width = (j < k ? 100 : j > k ? 0 : 100 * clamp(lt / T.dur)) + '%');
+  renderCaption(k, lt);
+};
+window.READY = document.fonts.ready.then(() => { renderAt(0); return true; });
+if (location.search.includes('play')) { const t0 = performance.now(); const loop = () => { renderAt(((performance.now() - t0) / 1000) % TOTAL); requestAnimationFrame(loop); }; loop(); }
+</script>
+</body>
+</html>

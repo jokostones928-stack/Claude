@@ -19,3 +19,9 @@ python3 audio.py
 node render.js                 # options: --workers 4 --fps 30 --from 0 --to 60 --still 10,20
 ```
 Change the voice with `VOICE=am_michael python3 audio.py` (other Kokoro voices: `af_bella`, `bf_emma`, `bm_george`, and more).
+
+## Reels version (9:16, ~1 min)
+```bash
+SCENES=reels.json BUILD=build-reels SPEED=1.05 LEAD=0.25 GAP=0.3 TAIL=0.55 LEAD_OVERRIDE='{"r_hook":0.3}' TAIL_OVERRIDE='{"r_quote":1.2,"r_cta":2.5}' python3 audio.py
+node render.js --page reels.html --scenes reels.json --build build-reels --w 1080 --h 1920 --out Thrivers_Reels.mp4
+```

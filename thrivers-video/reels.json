@@ -1,0 +1,67 @@
+[
+  {
+    "id": "r_hook", "type": "hook", "accent": "#f4a261",
+    "cues": [
+      "Your child gets straight A's. So why do they fall apart at the first setback?",
+      "The book Thrivers, by psychologist Michele Borba, explains why."
+    ],
+    "data": {"line1": "Straight A's…", "line2": "but falls apart at the <em>first setback?</em>"}
+  },
+  {
+    "id": "r_vs", "type": "vs", "accent": "#90be6d",
+    "cues": [
+      "Strivers chase grades and approval, and they're terrified of failure.",
+      "Thrivers are driven from within. They see failure as a lesson, and bounce back."
+    ],
+    "data": {
+      "left": {"title": "Strivers", "items": ["Chase grades & approval", "Fear failure", "Burn out"]},
+      "right": {"title": "Thrivers", "items": ["Driven from within", "Failure = a lesson", "Bounce back"]}
+    }
+  },
+  {
+    "id": "r_seven", "type": "seven", "accent": "#e9c46a",
+    "cues": [
+      "The difference? Seven character strengths, and every one can be taught.",
+      "Self-confidence. Empathy. Self-control. Integrity. Curiosity. Perseverance. And optimism."
+    ],
+    "data": {"items": [
+      ["Self-confidence", "Self-Confidence", "#ff6b81"], ["Empathy", "Empathy", "#ff6b81"],
+      ["Self-control", "Self-Control", "#4cc9f0"], ["Integrity", "Integrity", "#4cc9f0"], ["Curiosity", "Curiosity", "#4cc9f0"],
+      ["Perseverance", "Perseverance", "#ffb703"], ["optimism", "Optimism", "#ffb703"]
+    ]}
+  },
+  {
+    "id": "r_multi", "type": "multi", "accent": "#c77dff",
+    "cues": [
+      "And they multiply.",
+      "Self-control plus perseverance equals discipline.",
+      "Empathy plus curiosity equals deeper relationships."
+    ],
+    "data": {"eqs": [
+      {"cue": 1, "a": "Self-Control", "b": "Perseverance", "r": "Discipline"},
+      {"cue": 2, "a": "Empathy", "b": "Curiosity", "r": "Deeper relationships"}
+    ]}
+  },
+  {
+    "id": "r_tips", "type": "tips", "accent": "#06d6a0",
+    "cues": [
+      "Start tonight.",
+      "Put the phone away. Ask how they really feel. And let them solve their own problems."
+    ],
+    "data": {"tips": [
+      ["phone", "smartphone", "Put the phone away"],
+      ["feel", "message-circle-heart", "Ask how they really feel"],
+      ["solve", "puzzle", "Let them solve their own problems"]
+    ]}
+  },
+  {
+    "id": "r_quote", "type": "quote", "accent": "#f4a261",
+    "cues": ["Prepare the child for the road, not the road for the child."],
+    "data": {"html": "Prepare the child<br>for the road,<br><em>not the road<br>for the child.</em>"}
+  },
+  {
+    "id": "r_cta", "type": "cta", "accent": "#f4a261",
+    "cues": ["Raise a Thriver, not just a Striver. Save this, and share it with a parent who needs it."],
+    "data": {"title": "Thrivers", "author": "Michele Borba, Ed.D."}
+  }
+]

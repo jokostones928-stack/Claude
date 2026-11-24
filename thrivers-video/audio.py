@@ -7,23 +7,24 @@ import numpy as np
 import soundfile as sf
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-BUILD = os.path.join(HERE, "build")
+BUILD = os.path.join(HERE, os.environ.get("BUILD", "build"))
+SCENES_FILE = os.environ.get("SCENES", "scenes.json")
 MODEL_DIR = os.environ.get("KOKORO_DIR", os.path.expanduser("~/tts"))
 VOICE = os.environ.get("VOICE", "af_heart")
 SPEED = float(os.environ.get("SPEED", "0.98"))
 SR = 24000
 
-SCENE_LEAD = 0.9    # silence before first cue of a scene
-CUE_GAP = 0.45      # pause between cues
-SCENE_TAIL = 1.3    # hold after last cue before next scene
-TAIL_OVERRIDE = {"title": 1.0, "takeaway": 2.0, "outro": 4.5}
-LEAD_OVERRIDE = {"title": 1.6, "outro": 1.2}
+SCENE_LEAD = float(os.environ.get("LEAD", "0.9"))   # silence before first cue of a scene
+CUE_GAP = float(os.environ.get("GAP", "0.45"))     # pause between cues
+SCENE_TAIL = float(os.environ.get("TAIL", "1.3"))   # hold after last cue before next scene
+TAIL_OVERRIDE = json.loads(os.environ.get("TAIL_OVERRIDE", '{"title": 1.0, "takeaway": 2.0, "outro": 4.5}'))
+LEAD_OVERRIDE = json.loads(os.environ.get("LEAD_OVERRIDE", '{"title": 1.6, "outro": 1.2}'))
 
 
 def tts_all(scenes):
     from kokoro_onnx import Kokoro
     k = Kokoro(os.path.join(MODEL_DIR, "kokoro-v1.0.onnx"), os.path.join(MODEL_DIR, "voices-v1.0.bin"))
-    cache_dir = os.path.join(BUILD, "tts")
+    cache_dir = os.path.join(HERE, "build", "tts")
     os.makedirs(cache_dir, exist_ok=True)
     out = []
     for s in scenes:
@@ -141,7 +142,7 @@ def music(total, sr=44100, seed=7):
 
 def main():
     os.makedirs(BUILD, exist_ok=True)
-    scenes = json.load(open(os.path.join(HERE, "scenes.json")))
+    scenes = json.load(open(os.path.join(HERE, SCENES_FILE)))
     clips = tts_all(scenes)
     voice, timing, total = build_timeline(scenes, clips)
     sf.write(os.path.join(BUILD, "narration.wav"), voice, SR)

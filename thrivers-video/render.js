@@ -1,5 +1,6 @@
 // Frame-accurate renderer: drives index.html's renderAt(t) in headless Chromium,
 // pipes JPEG frames into ffmpeg (one segment per worker), then muxes narration + music.
+// Reels: node render.js --page reels.html --scenes reels.json --build build-reels --w 1080 --h 1920 --out Thrivers_Reels.mp4
 // Usage: node render.js [--fps 30] [--workers 4] [--from 0] [--to <sec>] [--still t1,t2,...] [--out file.mp4]
 const { chromium } = require('playwright');
 const { spawn, execFileSync } = require('child_process');
@@ -7,23 +8,25 @@ const fs = require('fs'), path = require('path');
 
 const args = Object.fromEntries(process.argv.slice(2).reduce((a, v, i, arr) => (v.startsWith('--') ? a.concat([[v.slice(2), arr[i + 1] && !arr[i + 1].startsWith('--') ? arr[i + 1] : '1']]) : a), []));
 const FPS = +(args.fps || 30), WORKERS = +(args.workers || 4);
-const DIR = __dirname, BUILD = path.join(DIR, 'build');
+const DIR = __dirname, BUILD = path.join(DIR, args.build || 'build');
+const PAGE = args.page || 'index.html', SCENES_FILE = args.scenes || 'scenes.json';
+const W = +(args.w || 1920), H = +(args.h || 1080);
 
 // icons -> build/icons.js
 const iconDir = path.join(DIR, 'node_modules/lucide-static/icons');
 const icons = {};
 for (const f of fs.readdirSync(iconDir)) if (f.endsWith('.svg')) icons[f.slice(0, -4)] = fs.readFileSync(path.join(iconDir, f), 'utf8').replace(/<!--[\s\S]*?-->/g, '').trim();
-const html = fs.readFileSync(path.join(DIR, 'index.html'), 'utf8');
+const html = fs.readFileSync(path.join(DIR, PAGE), 'utf8');
 const used = {}; for (const m of html.matchAll(/'([a-z0-9-]+)'/g)) if (icons[m[1]]) used[m[1]] = icons[m[1]];
-const scenesTxt = fs.readFileSync(path.join(DIR, 'scenes.json'), 'utf8');
-for (const m of scenesTxt.matchAll(/"icon": "([a-z0-9-]+)"/g)) if (icons[m[1]]) used[m[1]] = icons[m[1]];
+const scenesTxt = fs.readFileSync(path.join(DIR, SCENES_FILE), 'utf8');
+for (const m of scenesTxt.matchAll(/"([a-z0-9-]+)"/g)) if (icons[m[1]]) used[m[1]] = icons[m[1]];
 fs.writeFileSync(path.join(BUILD, 'icons.js'), 'window.ICONS=' + JSON.stringify(used) + ';');
 
 const TOTAL = +fs.readFileSync(path.join(BUILD, 'data.js'), 'utf8').match(/TOTAL=([\d.]+)/)[1];
-const URL = 'file://' + path.join(DIR, 'index.html');
+const URL = 'file://' + path.join(DIR, PAGE);
 
 async function openPage(browser) {
-  const page = await browser.newPage({ viewport: { width: 1920, height: 1080 }, deviceScaleFactor: 1 });
+  const page = await browser.newPage({ viewport: { width: W, height: H }, deviceScaleFactor: 1 });
   page.on('pageerror', e => console.error('PAGE ERROR', e.message));
   await page.goto(URL);
   await page.evaluate(() => window.READY);
