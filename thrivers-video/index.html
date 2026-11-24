@@ -1,0 +1,500 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Thrivers Animation</title>
+<style>
+@font-face { font-family: "Fraunces"; src: url(assets/fonts/Fraunces.woff2) format("woff2"); font-weight: 100 900; font-style: normal; font-display: block; }
+@font-face { font-family: "Fraunces"; src: url(assets/fonts/Fraunces-Italic.woff2) format("woff2"); font-weight: 100 900; font-style: italic; font-display: block; }
+:root { --accent: #f4a261; --ink: #f6f1e9; --muted: #a9b0c3; --card: rgba(255,255,255,0.055); --line: rgba(255,255,255,0.12); }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 1920px; height: 1080px; overflow: hidden; background: #0a0d18; }
+body { font-family: "Inter", sans-serif; color: var(--ink); -webkit-font-smoothing: antialiased; }
+#stage { position: absolute; inset: 0; overflow: hidden; }
+#bg { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 40%, #141a2e 0%, #0a0d18 70%); }
+.blob { position: absolute; width: 1500px; height: 1500px; border-radius: 50%; margin: -750px 0 0 -750px; opacity: .30; }
+#grain { position: absolute; inset: 0; opacity: .05; background-image: radial-gradient(rgba(255,255,255,.9) 1px, transparent 1px); background-size: 46px 46px; }
+#vignette { position: absolute; inset: 0; background: radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,.55) 100%); }
+.pt { position: absolute; border-radius: 50%; background: #fff; }
+#brand { position: absolute; top: 54px; left: 72px; font-size: 20px; letter-spacing: .32em; font-weight: 700; color: rgba(255,255,255,.75); display: flex; align-items: center; gap: 16px; }
+#brand i { font-style: normal; font-weight: 400; letter-spacing: .08em; color: rgba(255,255,255,.45); }
+#brand .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 18px var(--accent); }
+#chapter { position: absolute; bottom: 52px; left: 72px; font-size: 20px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.6); }
+#progress { position: absolute; bottom: 40px; left: 72px; right: 72px; height: 3px; background: rgba(255,255,255,.08); border-radius: 3px; overflow: hidden; }
+#progress div { height: 100%; background: var(--accent); width: 0; box-shadow: 0 0 12px var(--accent); }
+#chrome { position: absolute; inset: 0; pointer-events: none; }
+
+.scene { position: absolute; inset: 0; padding: 130px 150px 120px; display: none; }
+.a { will-change: transform, opacity; }
+.serif { font-family: "Fraunces", serif; }
+em { font-style: italic; color: var(--accent); }
+b { color: var(--accent); font-weight: 700; }
+.h-kicker { font-size: 22px; letter-spacing: .3em; text-transform: uppercase; font-weight: 700; color: var(--accent); }
+.h-title { font-family: "Fraunces", serif; font-size: 84px; font-weight: 600; line-height: 1.05; letter-spacing: -.01em; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 28px; }
+.icon svg { display: block; }
+.strike { position: relative; display: inline-block; color: var(--muted); }
+.strike::after { content: ""; position: absolute; left: -4%; top: 54%; height: 6px; width: calc(108% * var(--s, 0)); background: #ef476f; border-radius: 4px; }
+.chip { display: inline-flex; align-items: center; padding: 18px 34px; border-radius: 999px; border: 2px solid var(--accent); font-size: 36px; font-weight: 600; background: rgba(255,255,255,.04); }
+
+/* title */
+.title-wrap { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+.rings { position: absolute; left: 50%; top: 47%; width: 0; height: 0; }
+.ring { position: absolute; border-radius: 50%; border: 2px dashed rgba(255,255,255,.12); }
+.title-big { font-family: "Fraunces", serif; font-size: 250px; font-weight: 800; letter-spacing: -.02em; line-height: 1; }
+.title-big span { display: inline-block; }
+.title-sub { font-family: "Fraunces", serif; font-style: italic; font-size: 46px; color: #e7dccb; margin-top: 26px; max-width: 1300px; }
+.title-rule { width: 260px; height: 3px; background: var(--accent); margin: 44px auto 34px; transform-origin: center; }
+.title-author { font-size: 36px; font-weight: 600; letter-spacing: .04em; }
+.meta { display: flex; gap: 18px; margin-top: 34px; justify-content: center; }
+.meta span { font-size: 22px; padding: 10px 24px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); letter-spacing: .06em; }
+
+/* statement */
+.st-wrap { position: absolute; left: 150px; right: 150px; top: 170px; bottom: 140px; display: flex; flex-direction: column; justify-content: center; gap: 46px; }
+.st-line { font-family: "Fraunces", serif; font-size: 74px; font-weight: 500; line-height: 1.15; }
+.st-line .w { display: inline-block; margin-right: .22em; }
+.big7 { font-size: 110px; line-height: .8; }
+.chips { display: flex; gap: 24px; flex-wrap: wrap; }
+
+/* versus */
+.vs-wrap { position: absolute; left: 130px; right: 130px; top: 150px; height: 680px; display: flex; gap: 120px; }
+.vs-card { flex: 1; padding: 44px 54px; position: relative; }
+.vs-card h3 { font-family: "Fraunces", serif; font-size: 72px; font-weight: 700; margin-bottom: 26px; display: flex; align-items: center; gap: 22px; }
+.vs-card.left h3 { color: #c9cbd6; }
+.vs-card.right { border-color: rgba(144,190,109,.45); background: rgba(144,190,109,.08); }
+.vs-card.right h3 { color: var(--accent); }
+.vs-item { display: flex; align-items: center; gap: 22px; font-size: 34px; padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,.07); }
+.vs-item:last-child { border-bottom: 0; }
+.vs-item .icon { flex: none; width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; }
+.left .vs-item { color: #c3c6d2; }
+.left .vs-item .icon { background: rgba(239,71,111,.18); }
+.right .vs-item .icon { background: rgba(144,190,109,.25); }
+.vs-badge { position: absolute; left: 50%; top: 480px; width: 120px; height: 120px; margin: -60px 0 0 -60px; border-radius: 50%; background: #0f1424; border: 2px solid var(--line); display: grid; place-items: center; font-family: "Fraunces", serif; font-size: 44px; font-weight: 700; font-style: italic; color: var(--accent); }
+.vs-footer { position: absolute; left: 0; right: 0; bottom: 130px; text-align: center; font-family: "Fraunces", serif; font-size: 50px; }
+
+/* pillars */
+.pl-head { position: absolute; top: 140px; left: 0; right: 0; text-align: center; }
+.pl-cols { position: absolute; left: 150px; right: 150px; top: 300px; bottom: 120px; display: flex; gap: 50px; }
+.pl-col { flex: 1; padding: 44px 46px; text-align: center; display: flex; flex-direction: column; align-items: center; }
+.pl-ic { flex: none; width: 140px; height: 140px; border-radius: 50%; display: grid; place-items: center; margin-bottom: 26px; }
+.pl-verb { font-size: 22px; letter-spacing: .3em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+.pl-name { font-family: "Fraunces", serif; font-size: 84px; font-weight: 700; margin: 4px 0 26px; }
+.pl-item { font-size: 34px; font-weight: 500; padding: 12px 30px; margin: 6px 0; border-radius: 999px; background: rgba(255,255,255,.06); }
+
+/* strength */
+.sg-left { position: absolute; left: 140px; top: 150px; width: 600px; bottom: 140px; display: flex; flex-direction: column; justify-content: center; }
+.sg-num { font-family: "Fraunces", serif; font-size: 300px; font-weight: 800; line-height: .85; color: transparent; -webkit-text-stroke: 3px var(--accent); letter-spacing: -.03em; }
+.sg-part { font-size: 24px; letter-spacing: .34em; font-weight: 700; color: var(--accent); text-transform: uppercase; margin-top: 30px; display: flex; align-items: center; gap: 14px; }
+.sg-name { font-family: "Fraunces", serif; font-size: 96px; font-weight: 700; line-height: 1.02; margin-top: 14px; }
+.sg-ic { position: absolute; left: 390px; top: 40px; width: 210px; height: 210px; border-radius: 50%; display: grid; place-items: center; background: radial-gradient(circle, color-mix(in srgb, var(--accent) 35%, transparent), transparent 70%); }
+.sg-right { position: absolute; left: 820px; right: 130px; top: 140px; bottom: 140px; display: flex; flex-direction: column; justify-content: center; gap: 34px; }
+.sg-def { font-family: "Fraunces", serif; font-style: italic; font-size: 48px; line-height: 1.22; color: #efe6d8; }
+.sg-label { font-size: 19px; letter-spacing: .28em; font-weight: 700; color: var(--muted); text-transform: uppercase; margin-bottom: 14px; }
+.sg-abs { display: flex; gap: 18px; }
+.sg-ab { flex: 1; padding: 20px 22px; border-radius: 20px; background: rgba(255,255,255,.06); border: 1px solid var(--line); font-size: 27px; font-weight: 600; display: flex; align-items: center; gap: 14px; }
+.sg-ab .n { flex: none; width: 40px; height: 40px; border-radius: 50%; background: var(--accent); color: #111; font-weight: 800; font-size: 20px; display: grid; place-items: center; }
+.sg-pr { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 34px; }
+.sg-pi { display: flex; align-items: center; gap: 14px; font-size: 29px; color: #dfe3ee; }
+.sg-lesson { padding: 28px 36px; border-left: 6px solid var(--accent); background: linear-gradient(90deg, color-mix(in srgb, var(--accent) 16%, transparent), transparent); border-radius: 6px 22px 22px 6px; font-family: "Fraunces", serif; font-size: 40px; line-height: 1.25; display: flex; gap: 22px; align-items: flex-start; }
+
+/* multiplier */
+.mp-head { position: absolute; top: 130px; left: 150px; right: 150px; display: flex; align-items: flex-end; justify-content: space-between; }
+.mp-x { font-family: "Fraunces", serif; font-size: 150px; line-height: .7; color: var(--accent); font-weight: 300; }
+.mp-grid { position: absolute; left: 150px; right: 150px; top: 300px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 34px; }
+.mp-card { padding: 30px 34px 28px; min-height: 236px; display: flex; flex-direction: column; justify-content: space-between; }
+.mp-parts { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; font-size: 26px; font-weight: 600; }
+.mp-parts .p { padding: 8px 18px; border-radius: 999px; background: rgba(255,255,255,.08); }
+.mp-parts .plus { color: var(--accent); font-weight: 800; font-size: 32px; }
+.mp-res { font-family: "Fraunces", serif; font-size: 42px; font-weight: 600; color: var(--accent); margin-top: 22px; display: flex; align-items: center; gap: 14px; line-height: 1.1; }
+.mp-foot { position: absolute; left: 0; right: 0; bottom: 105px; text-align: center; font-family: "Fraunces", serif; font-size: 46px; }
+
+/* science */
+.sc-people { position: absolute; left: 150px; right: 150px; top: 300px; display: grid; grid-template-columns: repeat(6, 1fr); gap: 20px; }
+.sc-p { text-align: center; padding: 24px 12px; }
+.sc-av { width: 96px; height: 96px; margin: 0 auto 14px; border-radius: 50%; display: grid; place-items: center; font-family: "Fraunces", serif; font-weight: 700; font-size: 38px; background: color-mix(in srgb, var(--accent) 22%, transparent); border: 2px solid var(--accent); }
+.sc-name { font-size: 25px; font-weight: 700; }
+.sc-field { font-size: 20px; color: var(--muted); margin-top: 6px; }
+.sc-mid { position: absolute; left: 150px; right: 150px; top: 560px; display: flex; gap: 34px; align-items: stretch; }
+.sc-mid-l { width: 420px; display: flex; flex-direction: column; justify-content: center; }
+.sc-two { font-family: "Fraunces", serif; font-size: 52px; font-weight: 600; line-height: 1.1; }
+.sc-f { flex: 1; padding: 30px 34px; display: flex; gap: 24px; align-items: center; }
+.sc-f .ic { flex: none; width: 96px; height: 96px; border-radius: 24px; display: grid; place-items: center; background: color-mix(in srgb, var(--accent) 22%, transparent); }
+.sc-f h4 { font-family: "Fraunces", serif; font-size: 38px; margin-bottom: 8px; }
+.sc-f p { font-size: 25px; color: #cfd4e0; line-height: 1.35; }
+.sc-cav { position: absolute; left: 150px; right: 150px; bottom: 120px; display: flex; gap: 18px; align-items: center; font-size: 27px; color: #d8dce6; padding: 20px 28px; border-radius: 18px; background: rgba(255,255,255,.05); }
+
+/* mistakes */
+.mk-grid { position: absolute; left: 150px; right: 150px; top: 330px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 26px; }
+.mk-card { padding: 30px 28px; min-height: 190px; display: flex; flex-direction: column; gap: 18px; background: rgba(239,71,111,.07); border-color: rgba(239,71,111,.3); }
+.mk-card .ic { width: 54px; height: 54px; border-radius: 50%; background: rgba(239,71,111,.2); display: grid; place-items: center; }
+.mk-card .t { font-size: 32px; font-weight: 600; line-height: 1.2; }
+.mk-foot { position: absolute; left: 150px; right: 150px; bottom: 140px; font-family: "Fraunces", serif; font-size: 44px; line-height: 1.25; text-align: center; }
+
+/* framework */
+.fw-cols { position: absolute; left: 150px; right: 150px; top: 330px; display: flex; gap: 40px; }
+.fw-col { flex: 1; padding: 36px 38px; }
+.fw-col h3 { font-family: "Fraunces", serif; font-size: 58px; display: flex; align-items: center; gap: 18px; margin-bottom: 18px; color: var(--accent); }
+.fw-it { font-size: 29px; padding: 12px 0; display: flex; gap: 14px; align-items: center; color: #dfe3ee; border-bottom: 1px solid rgba(255,255,255,.06); }
+.fw-it:last-child { border: 0; }
+.fw-it .d { flex: none; width: 12px; height: 12px; border-radius: 50%; background: var(--accent); }
+.fw-foot { position: absolute; left: 0; right: 0; bottom: 115px; display: flex; justify-content: center; }
+.fw-foot div { font-size: 30px; padding: 16px 34px; border-radius: 999px; border: 2px solid var(--accent); display: flex; gap: 14px; align-items: center; }
+
+/* questions */
+.q-left { position: absolute; left: 150px; top: 170px; width: 560px; bottom: 140px; display: flex; flex-direction: column; justify-content: center; }
+.q-mark { font-family: "Fraunces", serif; font-size: 360px; font-weight: 800; line-height: .8; color: var(--accent); opacity: .9; }
+.q-list { position: absolute; left: 780px; right: 140px; top: 150px; bottom: 140px; display: flex; flex-direction: column; justify-content: center; gap: 16px; }
+.q-item { font-family: "Fraunces", serif; font-size: 42px; line-height: 1.2; display: flex; gap: 22px; align-items: baseline; transform-origin: left center; }
+.q-item .n { font-family: "Inter"; font-size: 22px; font-weight: 800; color: var(--accent); width: 40px; flex: none; }
+
+/* critique */
+.cr-cards { position: absolute; left: 150px; right: 150px; top: 330px; display: flex; gap: 40px; }
+.cr-card { flex: 1; padding: 44px; }
+.cr-card h3 { display: flex; gap: 18px; align-items: center; font-size: 26px; letter-spacing: .26em; text-transform: uppercase; margin-bottom: 22px; }
+.cr-card p { font-family: "Fraunces", serif; font-size: 46px; line-height: 1.25; }
+.cr-verdict { position: absolute; left: 0; right: 0; bottom: 150px; display: flex; justify-content: center; align-items: center; gap: 22px; font-family: "Fraunces", serif; font-size: 50px; }
+
+/* takeaway */
+.tk-lines { position: absolute; left: 200px; right: 200px; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; gap: 40px; }
+.tk-line { font-family: "Fraunces", serif; font-size: 66px; line-height: 1.18; font-weight: 500; }
+.tk-quote { position: absolute; left: 150px; right: 150px; top: 0; bottom: 120px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+.tk-quote .qm { font-family: "Fraunces", serif; font-size: 260px; line-height: .5; color: var(--accent); height: 120px; }
+.tk-quote .qt { font-family: "Fraunces", serif; font-style: italic; font-size: 92px; line-height: 1.15; font-weight: 500; }
+.tk-final { margin-top: 70px; font-size: 52px; font-weight: 600; }
+
+/* outro */
+.out-wrap { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+.out-title { font-family: "Fraunces", serif; font-size: 170px; font-weight: 800; }
+.out-sub { font-size: 34px; margin-top: 14px; font-weight: 600; }
+.out-src { font-size: 24px; color: var(--muted); margin-top: 14px; letter-spacing: .08em; }
+.out-tag { margin-top: 60px; font-family: "Fraunces", serif; font-style: italic; font-size: 44px; color: var(--accent); }
+</style>
+<script src="build/data.js"></script>
+<script src="build/icons.js"></script>
+</head>
+<body>
+<div id="stage">
+  <div id="bg"><div class="blob" id="b1"></div><div class="blob" id="b2"></div><div class="blob" id="b3"></div><div id="grain"></div><div id="pts"></div><div id="vignette"></div></div>
+  <div id="scenes"></div>
+  <div id="chrome">
+    <div id="brand"><span class="dot"></span>THRIVERS <i>Michele Borba</i></div>
+    <div id="chapter"></div>
+    <div id="progress"><div></div></div>
+  </div>
+</div>
+<script>
+// ---------- helpers ----------
+const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
+const lerp = (a, b, t) => a + (b - a) * t;
+const ease = {
+  out: t => 1 - Math.pow(1 - t, 3),
+  inout: t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2,
+  back: t => { const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2); },
+  expo: t => t === 1 ? 1 : 1 - Math.pow(2, -10 * t),
+};
+function hex2rgb(h) { h = h.replace('#', ''); return [0, 2, 4].map(i => parseInt(h.substr(i, 2), 16)); }
+function mix(c1, c2, t) { const a = hex2rgb(c1), b = hex2rgb(c2); return 'rgb(' + a.map((v, i) => Math.round(lerp(v, b[i], t))).join(',') + ')'; }
+function icon(name, size = 40, color = 'currentColor', sw = 2) {
+  const s = (window.ICONS[name] || '').replace('<svg', `<svg width="${size}" height="${size}" style="color:${color}"`).replace(/stroke-width="2"/, `stroke-width="${sw}"`);
+  return `<span class="icon">${s}</span>`;
+}
+function h(html) { const d = document.createElement('div'); d.innerHTML = html.trim(); return d.firstElementChild; }
+function words(html, cls = 'w') {
+  // split plain text segments into word spans; keep tags intact (tags must not contain spaces inside text nodes handled at element level)
+  const tmp = document.createElement('div'); tmp.innerHTML = html;
+  const out = [];
+  tmp.childNodes.forEach(n => {
+    if (n.nodeType === 3) n.textContent.split(/\s+/).filter(Boolean).forEach(w => out.push(`<span class="${cls}">${w}</span>`));
+    else { n.classList.add(cls); out.push(n.outerHTML); }
+  });
+  return out.join(' ');
+}
+
+// ---------- animation registry ----------
+const anims = []; // per scene arrays
+function reg(si, el, t0, kind = 'up', o = {}) {
+  el.classList.add('a');
+  anims[si].push({ el, t0, kind, dur: o.dur || 0.9, out: o.out, outDur: o.outDur || 0.6, dim: o.dim, dimTo: o.dimTo ?? 0.38, drift: o.drift || 0, dist: o.dist || 50 });
+}
+function applyAnim(a, lt) {
+  let p = clamp((lt - a.t0) / a.dur);
+  let op = 1, tx = 0, ty = 0, sc = 1, blur = 0, extra = null;
+  switch (a.kind) {
+    case 'up': { const e = ease.out(p); op = e; ty = (1 - e) * a.dist; break; }
+    case 'down': { const e = ease.out(p); op = e; ty = -(1 - e) * a.dist; break; }
+    case 'left': { const e = ease.out(p); op = e; tx = -(1 - e) * 80; break; }
+    case 'right': { const e = ease.out(p); op = e; tx = (1 - e) * 80; break; }
+    case 'fade': op = ease.inout(p); break;
+    case 'scale': { const e = ease.out(p); op = e; sc = lerp(.86, 1, e); break; }
+    case 'pop': { op = clamp(p * 2.5); sc = p <= 0 ? .5 : lerp(.5, 1, ease.back(p)); break; }
+    case 'blur': { const e = ease.out(p); op = e; blur = (1 - e) * 14; ty = (1 - e) * 24; break; }
+    case 'grow': { const e = ease.expo(p); op = clamp(p * 4); extra = `scaleX(${e})`; break; }
+    case 'strike': { a.el.style.setProperty('--s', ease.inout(p)); op = 1; break; }
+    case 'letter': { const e = ease.out(p); op = e; ty = (1 - e) * 120; sc = lerp(1.25, 1, e); blur = (1 - e) * 10; break; }
+  }
+  if (a.dim !== undefined && lt > a.dim) op *= lerp(1, a.dimTo, ease.inout(clamp((lt - a.dim) / 0.7)));
+  if (a.out !== undefined && lt > a.out) { const q = ease.inout(clamp((lt - a.out) / a.outDur)); op *= 1 - q; ty -= q * 30; blur += q * 8; }
+  if (a.drift) ty += -lt * a.drift;
+  const st = a.el.style;
+  st.opacity = op.toFixed(4);
+  if (a.kind !== 'strike') {
+    st.transform = extra ? extra : `translate(${tx.toFixed(2)}px,${ty.toFixed(2)}px) scale(${sc.toFixed(4)})`;
+    st.filter = blur > 0.05 ? `blur(${blur.toFixed(2)}px)` : 'none';
+  }
+}
+
+// ---------- scene builders ----------
+const B = {};
+const C = (sc, i) => TIMING[sc._i].cues[i].start;
+const CD = (sc, i) => TIMING[sc._i].cues[i].dur;
+const spread = (sc, cue, i, n, frac = 0.85) => C(sc, cue) + CD(sc, cue) * frac * (i / n);
+
+function header(sc, root, kicker, title, t0 = 0.2) {
+  const k = h(`<div class="h-kicker">${kicker}</div>`), ti = h(`<div class="h-title">${title}</div>`);
+  root.append(k, ti); reg(sc._i, k, t0, 'fade'); reg(sc._i, ti, t0 + 0.15, 'blur');
+}
+
+B.title = (sc, el) => {
+  const d = sc.data, i = sc._i;
+  const rings = h(`<div class="rings"></div>`);
+  [520, 760, 1040, 1380].forEach((r, k) => { const g = h(`<div class="ring" style="width:${r}px;height:${r}px;left:${-r / 2}px;top:${-r / 2}px"></div>`); g.dataset.spin = (k % 2 ? -1 : 1) * (3 + k * 1.5); rings.append(g); reg(i, g, 0.2 + k * 0.25, 'scale', { dur: 2 }); });
+  el.append(rings);
+  const w = h(`<div class="title-wrap"></div>`); el.append(w);
+  const k = h(`<div class="h-kicker" style="margin-bottom:34px">${d.kicker}</div>`); w.append(k); reg(i, k, 0.3, 'fade');
+  const t = h(`<div class="title-big"></div>`); w.append(t);
+  [...d.title].forEach((ch, j) => { const s = h(`<span>${ch}</span>`); t.append(s); reg(i, s, 0.5 + j * 0.08, 'letter', { dur: 1.1 }); });
+  const sub = h(`<div class="title-sub">${d.subtitle}</div>`); w.append(sub); reg(i, sub, C(sc, 0) + 1.2, 'blur', { dur: 1.2 });
+  const r = h(`<div class="title-rule"></div>`); w.append(r); reg(i, r, C(sc, 1) - 0.2, 'grow', { dur: 1.2 });
+  const a = h(`<div class="title-author">${d.author}</div>`); w.append(a); reg(i, a, C(sc, 1) + 0.2, 'up');
+  const m = h(`<div class="meta">${d.meta.map(x => `<span>${x}</span>`).join('')}</div>`); w.append(m);
+  [...m.children].forEach((c, j) => reg(i, c, C(sc, 1) + 1.0 + j * 0.15, 'up', { dist: 20 }));
+};
+
+B.statement = (sc, el) => {
+  const d = sc.data, i = sc._i;
+  const w = h(`<div class="st-wrap"></div>`); el.append(w);
+  d.lines.forEach((ln, j) => {
+    const next = d.lines[j + 1];
+    const dimAt = next ? C(sc, next.cue) - 0.2 : undefined;
+    if (ln.chips) {
+      const row = h(`<div class="chips"></div>`); w.append(row);
+      ln.chips.forEach((c, k) => { const cc = h(`<div class="chip">${c}</div>`); row.append(cc); reg(i, cc, C(sc, ln.cue) + 1.2 + k * 0.45, 'pop', { dur: 0.7 }); });
+      return;
+    }
+    const line = h(`<div class="st-line">${words(ln.html)}</div>`); w.append(line);
+    const ws = line.querySelectorAll('.w'); const span = Math.min(CD(sc, ln.cue) * 0.5, ws.length * 0.12);
+    ws.forEach((x, k) => reg(i, x, C(sc, ln.cue) + span * k / ws.length, 'blur', { dur: 0.7, dim: dimAt }));
+    line.querySelectorAll('.strike').forEach(s => { const a = { el: s, t0: C(sc, ln.cue) + 2.2, kind: 'strike', dur: 0.8 }; anims[i].push(a); });
+  });
+};
+
+B.versus = (sc, el) => {
+  const d = sc.data, i = sc._i;
+  const w = h(`<div class="vs-wrap"></div>`); el.append(w);
+  [['left', d.left, 0, 'x', '#ef476f'], ['right', d.right, 1, 'check', '#90be6d']].forEach(([side, col, cue, ic, c]) => {
+    const card = h(`<div class="card vs-card ${side}"><h3>${icon(side === 'left' ? 'trophy' : 'sprout', 60, c)}${col.title}</h3></div>`);
+    w.append(card); reg(i, card, C(sc, cue) - 0.4, side === 'left' ? 'left' : 'right', { dim: side === 'left' ? C(sc, 1) : undefined, dimTo: 0.55 });
+    col.items.forEach((t, k) => { const it = h(`<div class="vs-item">${icon(ic, 26, c, 3)}<span>${t}</span></div>`); card.append(it); reg(i, it, spread(sc, cue, k, col.items.length), 'up', { dist: 24 }); });
+  });
+  const vs = h(`<div class="vs-badge">vs</div>`); el.append(vs); reg(i, vs, C(sc, 1) - 0.6, 'pop');
+  const f = h(`<div class="vs-footer">${d.footer}</div>`); el.append(f); reg(i, f, C(sc, 2), 'blur');
+};
+
+B.pillars = (sc, el) => {
+  const d = sc.data, i = sc._i;
+  const hd = h(`<div class="pl-head"></div>`); el.append(hd); header(sc, hd, 'Seven Strengths · Three Dimensions', d.title);
+  const cols = h(`<div class="pl-cols"></div>`); el.append(cols);
+  d.cols.forEach(c => {
+    const col = h(`<div class="card pl-col" style="border-color:${c.color}55;background:${c.color}10"><div class="pl-ic" style="background:${c.color}25;box-shadow:0 0 60px ${c.color}40">${icon(c.icon, 76, c.color, 1.75)}</div><div class="pl-verb">${c.verb}</div><div class="pl-name" style="color:${c.color}">${c.name}</div></div>`);
+    cols.append(col); reg(i, col, C(sc, c.cue) - 0.3, 'up', { dist: 80 });
+    c.items.forEach((t, k) => { const it = h(`<div class="pl-item">${t}</div>`); col.append(it); reg(i, it, C(sc, c.cue) + 1.0 + k * 0.45, 'pop', { dur: 0.6 }); });
+  });
+};
+
+B.strength = (sc, el) => {
+  const d = sc.data, i = sc._i;
+  const L = h(`<div class="sg-left"></div>`); el.append(L);
+  const ic = h(`<div class="sg-ic">${icon(d.icon, 110, 'var(--accent)', 1.5)}</div>`); L.append(ic); reg(i, ic, 0.6, 'pop', { dur: 1.1 });
+  const num = h(`<div class="sg-num">${d.num}</div>`); L.append(num); reg(i, num, 0.15, 'scale', { dur: 1.2 });
+  const part = h(`<div class="sg-part">${icon({ Heart: 'heart', Mind: 'brain', Will: 'flame' }[d.part], 28, 'var(--accent)')}${d.part}</div>`); L.append(part); reg(i, part, 0.5, 'left');
+  const nm = h(`<div class="sg-name">${d.name}</div>`); L.append(nm); reg(i, nm, 0.7, 'blur', { dur: 1 });
+  const R = h(`<div class="sg-right"></div>`); el.append(R);
+  const def = h(`<div class="sg-def">“${d.def}”</div>`); R.append(def); reg(i, def, C(sc, 0) + 1.4, 'blur', { dur: 1 });
+  const ab = h(`<div><div class="sg-label">Three essential abilities</div><div class="sg-abs"></div></div>`); R.append(ab);
+  reg(i, ab.firstChild, C(sc, 1) - 0.2, 'fade');
+  d.abilities.forEach((t, k) => { const x = h(`<div class="sg-ab"><span class="n">${k + 1}</span>${t}</div>`); ab.lastChild.append(x); reg(i, x, spread(sc, 1, k + 0.6, 3.6, 1), 'up', { dist: 30 }); });
+  const pr = h(`<div><div class="sg-label">In practice</div><div class="sg-pr"></div></div>`); R.append(pr);
+  reg(i, pr.firstChild, C(sc, 2) - 0.2, 'fade');
+  d.practice.forEach((t, k) => { const x = h(`<div class="sg-pi">${icon('circle-check', 32, 'var(--accent)')}${t}</div>`); pr.lastChild.append(x); reg(i, x, spread(sc, 2, k, 4, 0.9), 'left'); });
+  const ls = h(`<div class="sg-lesson">${icon('key-round', 44, 'var(--accent)')}<div>${d.lesson}</div></div>`); R.append(ls); reg(i, ls, C(sc, 3) - 0.1, 'scale', { dur: 1 });
+};
+
+B.multiplier = (sc, el) => {
+  const d = sc.data, i = sc._i;
+  const hd = h(`<div class="mp-head"><div></div><div class="mp-x">×</div></div>`); el.append(hd);
+  header(sc, hd.firstChild, 'Strengths work together', 'The Multiplier Effect');
+  reg(i, hd.lastChild, 1.0, 'pop', { dur: 1.2 });
+  const g = h(`<div class="mp-grid"></div>`); el.append(g);
+  d.combos.forEach((c, k) => {
+    const parts = c.parts.map(p => `<span class="p">${p}</span>`).join('<span class="plus">+</span>');
+    const card = h(`<div class="card mp-card"><div class="mp-parts">${parts}</div><div class="mp-res">${icon('arrow-right', 36, 'var(--accent)', 2.5)}${c.result}</div></div>`);
+    g.append(card);
+    const nx = d.combos[k + 1];
+    reg(i, card, C(sc, c.cue) - 0.2, 'pop', { dur: 0.8, dim: nx ? C(sc, nx.cue) - 0.2 : undefined, dimTo: 0.72 });
+    reg(i, card.querySelector('.mp-res'), C(sc, c.cue) + Math.min(1.6, CD(sc, c.cue) * 0.5), 'left');
+  });
+  const f = h(`<div class="mp-foot">${d.footer}</div>`); el.append(f); reg(i, f, C(sc, 7), 'blur');
+};
+
+B.science = (sc, el) => {
+  const d = sc.data, i = sc._i;
+  const hd = h(`<div></div>`); el.append(hd); header(sc, hd, 'Research foundations', 'The Science of Resilience');
+  const pp = h(`<div class="sc-people"></div>`); el.append(pp);
+  d.people.forEach(([n, f], k) => {
+    const ini = n.split(' ').map(x => x[0]).join('');
+    const c = h(`<div class="card sc-p"><div class="sc-av">${ini}</div><div class="sc-name">${n}</div><div class="sc-field">${f}</div></div>`);
+    pp.append(c); reg(i, c, C(sc, 0) + 1.3 + CD(sc, 0) * 0.85 * k / 6, 'pop', { dur: 0.7, dim: C(sc, 1), dimTo: 0.5 });
+  });
+  const mid = h(`<div class="sc-mid"><div class="sc-mid-l"><div class="sg-label">Key finding</div><div class="sc-two">Two protective factors</div></div></div>`); el.append(mid);
+  reg(i, mid.firstChild, C(sc, 1), 'left');
+  d.factors.forEach(f => { const c = h(`<div class="card sc-f"><div class="ic">${icon(f.icon, 52, 'var(--accent)')}</div><div><h4>${f.title}</h4><p>${f.text}</p></div></div>`); mid.append(c); reg(i, c, C(sc, f.cue) - 0.2, 'up'); });
+  const cv = h(`<div class="sc-cav">${icon('info', 34, 'var(--accent)')}<span>${d.caveat}</span></div>`); el.append(cv); reg(i, cv, C(sc, 4) + 2.5, 'up', { dist: 20 });
+};
+
+B.mistakes = (sc, el) => {
+  const d = sc.data, i = sc._i;
+  const hd = h(`<div></div>`); el.append(hd); header(sc, hd, 'What to avoid', 'Common Parenting Mistakes');
+  const g = h(`<div class="mk-grid"></div>`); el.append(g);
+  const by = {}; d.items.forEach(x => (by[x.cue] = by[x.cue] || []).push(x));
+  d.items.forEach(x => {
+    const k = by[x.cue].indexOf(x);
+    const c = h(`<div class="card mk-card"><div class="ic">${icon('x', 30, '#ef476f', 3)}</div><div class="t">${x.t}</div></div>`);
+    g.append(c); reg(i, c, spread(sc, x.cue, k, by[x.cue].length, 0.9), 'pop', { dur: 0.7, dim: C(sc, 3), dimTo: 0.65 });
+  });
+  const f = h(`<div class="mk-foot">${d.footer}</div>`); el.append(f); reg(i, f, C(sc, 3), 'blur');
+};
+
+B.framework = (sc, el) => {
+  const d = sc.data, i = sc._i;
+  const hd = h(`<div></div>`); el.append(hd); header(sc, hd, 'Start with everyday habits', 'A Practical Parenting Framework');
+  const cs = h(`<div class="fw-cols"></div>`); el.append(cs);
+  const ics = ['sun', 'calendar-days', 'calendar-range'];
+  d.cols.forEach((c, k) => {
+    const col = h(`<div class="card fw-col"><h3>${icon(ics[k], 50, 'var(--accent)')}${c.name}</h3></div>`); cs.append(col);
+    reg(i, col, C(sc, c.cue) - 0.3, 'up', { dist: 70 });
+    c.items.forEach((t, j) => { const it = h(`<div class="fw-it"><span class="d"></span>${t}</div>`); col.append(it); reg(i, it, spread(sc, c.cue, j + 0.5, c.items.length + 0.5, 0.9), 'left'); });
+  });
+  const f = h(`<div class="fw-foot"><div>${icon('clipboard-list', 36, 'var(--accent)')}<span>${d.footer}</span></div></div>`); el.append(f); reg(i, f.firstChild, C(sc, 4), 'pop');
+};
+
+B.questions = (sc, el) => {
+  const d = sc.data, i = sc._i;
+  const L = h(`<div class="q-left"><div class="q-mark">?</div><div class="h-title" style="font-size:66px;margin-top:30px">Questions every parent should reflect on</div></div>`); el.append(L);
+  reg(i, L.firstChild, 0.2, 'pop', { dur: 1.2 }); reg(i, L.lastChild, 0.5, 'blur');
+  const Q = h(`<div class="q-list"></div>`); el.append(Q);
+  d.qs.forEach((q, k) => {
+    const it = h(`<div class="q-item"><span class="n">0${k + 1}</span><span>${q}</span></div>`); Q.append(it);
+    const nx = k + 2 < sc.cues.length ? C(sc, k + 2) - 0.15 : undefined;
+    reg(i, it, C(sc, k + 1) - 0.15, 'left', { dim: nx, dimTo: 0.4 });
+  });
+};
+
+B.critique = (sc, el) => {
+  const d = sc.data, i = sc._i;
+  const hd = h(`<div></div>`); el.append(hd); header(sc, hd, 'Critical perspective', 'A Balanced View');
+  const cc = h(`<div class="cr-cards"></div>`); el.append(cc);
+  const p = h(`<div class="card cr-card" style="border-color:#06d6a055;background:#06d6a00d"><h3 style="color:#06d6a0">${icon('thumbs-up', 40, '#06d6a0')}${d.pro.title}</h3><p>${d.pro.text}</p></div>`);
+  const c = h(`<div class="card cr-card" style="border-color:#ffb70355;background:#ffb7030d"><h3 style="color:#ffb703">${icon('globe', 40, '#ffb703')}${d.con.title}</h3><p>${d.con.text}</p></div>`);
+  cc.append(p, c); reg(i, p, C(sc, 0) + 1.5, 'left'); reg(i, c, C(sc, 1), 'right');
+  const v = h(`<div class="cr-verdict">${icon('scale', 56, 'var(--accent)')}<span>${d.verdict}</span></div>`); el.append(v); reg(i, v, C(sc, 2), 'blur');
+};
+
+B.takeaway = (sc, el) => {
+  const d = sc.data, i = sc._i;
+  const w = h(`<div class="tk-lines"></div>`); el.append(w);
+  const outAt = C(sc, d.quote.cue) - 0.9;
+  d.lines.forEach((ln, j) => {
+    const line = h(`<div class="tk-line">${words(ln.html)}</div>`); w.append(line);
+    const nx = d.lines[j + 1];
+    const ws = line.querySelectorAll('.w');
+    ws.forEach((x, k) => reg(i, x, C(sc, ln.cue) + Math.min(1.6, CD(sc, ln.cue) * 0.45) * k / ws.length, 'blur', { dur: 0.7, dim: nx ? C(sc, nx.cue) - 0.2 : undefined, out: outAt }));
+  });
+  const q = h(`<div class="tk-quote"><div class="qm">“</div><div class="qt">${d.quote.html}</div><div class="tk-final">${d.final.html}</div></div>`); el.append(q);
+  reg(i, q.children[0], C(sc, d.quote.cue) - 0.3, 'pop', { dur: 1 });
+  reg(i, q.children[1], C(sc, d.quote.cue), 'blur', { dur: 1.4 });
+  reg(i, q.children[2], C(sc, d.final.cue), 'up');
+  q.querySelectorAll('.strike').forEach(s => anims[i].push({ el: s, t0: C(sc, d.final.cue) + 1.6, kind: 'strike', dur: 0.8 }));
+};
+
+B.outro = (sc, el) => {
+  const d = sc.data, i = sc._i;
+  const w = h(`<div class="out-wrap"><div class="h-kicker" style="margin-bottom:20px">Book Summary</div><div class="out-title">${d.title}</div><div class="out-sub">${d.author}</div><div class="out-src">${d.source}</div><div class="out-tag">Raise a Thriver.</div></div>`);
+  el.append(w);
+  [...w.children].forEach((c, k) => reg(i, c, 0.3 + k * 0.35, k === 1 ? 'scale' : 'up', { dur: 1.1 }));
+};
+
+// ---------- build ----------
+const scenesEl = document.getElementById('scenes');
+const sceneEls = [];
+SCENES.forEach((sc, i) => {
+  sc._i = i; anims.push([]);
+  const el = document.createElement('div'); el.className = 'scene'; scenesEl.append(el);
+  B[sc.type](sc, el); sceneEls.push(el);
+});
+const spinners = [...document.querySelectorAll('[data-spin]')];
+
+// particles (deterministic)
+let seed = 42; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+const pts = []; const ptsEl = document.getElementById('pts');
+for (let k = 0; k < 70; k++) { const d = document.createElement('div'); d.className = 'pt'; const s = 2 + rnd() * 4; d.style.width = d.style.height = s + 'px'; ptsEl.append(d); pts.push({ d, x: rnd() * 1920, y: rnd() * 1080, v: 8 + rnd() * 22, a: .1 + rnd() * .35, ph: rnd() * 6.28, s }); }
+const blobs = ['b1', 'b2', 'b3'].map(id => document.getElementById(id));
+
+// ---------- frame renderer ----------
+function sceneAt(t) { let k = 0; for (let i = 0; i < TIMING.length; i++) if (t >= TIMING[i].start) k = i; return k; }
+window.renderAt = function (t) {
+  const k = sceneAt(t);
+  const T = TIMING[k], sc = SCENES[k];
+  const lt = t - T.start;
+  // accent colour crossfade
+  const prev = SCENES[Math.max(0, k - 1)].accent;
+  const acc = mix(prev, sc.accent, ease.inout(clamp(lt / 1.2)));
+  document.documentElement.style.setProperty('--accent', acc);
+  // background
+  blobs.forEach((b, j) => {
+    const x = 960 + Math.sin(t * 0.07 + j * 2.1) * 620, y = 540 + Math.cos(t * 0.05 + j * 1.7) * 380;
+    b.style.transform = `translate(${x}px,${y}px) scale(${1 + 0.15 * Math.sin(t * .1 + j)})`;
+    const col = j === 1 ? '#3a2d6b' : acc;
+    b.style.background = `radial-gradient(circle, ${col} 0%, transparent 62%)`;
+    b.style.left = '0'; b.style.top = '0';
+  });
+  pts.forEach(p => {
+    const y = ((p.y - t * p.v) % 1180 + 1180) % 1180 - 50;
+    const x = p.x + Math.sin(t * 0.3 + p.ph) * 30;
+    p.d.style.transform = `translate(${x}px,${y}px)`;
+    p.d.style.opacity = (p.a * (0.6 + 0.4 * Math.sin(t * 0.8 + p.ph))).toFixed(3);
+  });
+  spinners.forEach(s => s.style.rotate = (t * s.dataset.spin) + 'deg');
+  // scenes
+  sceneEls.forEach((el, i) => { el.style.display = i === k ? 'block' : 'none'; });
+  const el = sceneEls[k];
+  const fin = ease.out(clamp(lt / 0.7)), fout = ease.inout(clamp((lt - (T.dur - 0.6)) / 0.6));
+  el.style.opacity = (fin * (1 - fout)).toFixed(4);
+  el.style.transform = `scale(${(1 + 0.012 * lt / T.dur + 0.03 * fout).toFixed(4)})`;
+  el.style.filter = fout > 0.01 ? `blur(${(fout * 10).toFixed(2)}px)` : 'none';
+  anims[k].forEach(a => applyAnim(a, lt));
+  // chrome
+  const showChrome = sc.chapter ? 1 : 0;
+  const chromeOp = showChrome * Math.min(fin, 1);
+  document.getElementById('chapter').textContent = sc.chapter;
+  document.getElementById('chapter').style.opacity = chromeOp * (1 - fout);
+  document.getElementById('brand').style.opacity = showChrome;
+  document.getElementById('progress').style.opacity = showChrome ? 1 : 0;
+  document.querySelector('#progress div').style.width = (100 * t / TOTAL).toFixed(3) + '%';
+};
+window.READY = document.fonts.ready.then(() => { renderAt(0); return true; });
+
+// preview mode: open index.html?play to watch in a browser (no audio)
+if (location.search.includes('play')) { const t0 = performance.now(); const loop = () => { renderAt(((performance.now() - t0) / 1000) % TOTAL); requestAnimationFrame(loop); }; loop(); }
+</script>
+</body>
+</html>

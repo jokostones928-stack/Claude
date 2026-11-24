@@ -1,0 +1,299 @@
+[
+  {
+    "id": "title", "type": "title", "chapter": "", "accent": "#f4a261",
+    "cues": [
+      "Thrivers. The surprising reasons why some kids struggle, and others shine.",
+      "A book by educational psychologist Michele Borba, published in twenty twenty-one."
+    ],
+    "data": {
+      "kicker": "Book Summary",
+      "title": "Thrivers",
+      "subtitle": "The Surprising Reasons Why Some Kids Struggle and Others Shine",
+      "author": "Michele Borba, Ed.D.",
+      "meta": ["2021", "Parenting", "Psychology", "Child Development"]
+    }
+  },
+  {
+    "id": "summary", "type": "statement", "chapter": "01 · Executive Summary", "accent": "#f4a261",
+    "cues": [
+      "Here is the central idea. Intelligence, excellent grades, and impressive achievements, on their own, are not enough to prepare children for life.",
+      "Many parents today are raising Strivers instead of Thrivers: kids who perform brilliantly on paper, but struggle emotionally, socially, and psychologically when adversity hits.",
+      "Borba argues that resilience, happiness, and lasting success rest on seven character strengths, and every one of them can be taught.",
+      "The goal isn't just successful children. It's capable, independent, compassionate, and resilient human beings."
+    ],
+    "data": {
+      "icon": "book-open",
+      "lines": [
+        {"cue": 0, "html": "Grades alone <em>don't</em> prepare kids for life."},
+        {"cue": 1, "html": "We're raising <span class='strike'>Strivers</span>&nbsp; not <b>Thrivers.</b>"},
+        {"cue": 2, "html": "<b class='big7'>7</b> character strengths — all of them <em>teachable.</em>"},
+        {"cue": 3, "chips": ["Capable", "Independent", "Compassionate", "Resilient"]}
+      ]
+    }
+  },
+  {
+    "id": "versus", "type": "versus", "chapter": "02 · Strivers vs Thrivers", "accent": "#90be6d",
+    "cues": [
+      "Strivers seek outside validation. They measure success in grades, rankings, and awards. They fear failure, lean heavily on their parents, compare themselves constantly, and are vulnerable to stress and burnout.",
+      "Thrivers are different. They're driven from within. They know their strengths and weaknesses, see failure as a way to learn, manage their emotions, build meaningful relationships, and pursue success with purpose.",
+      "The difference isn't intelligence, talent, or family income. It's the inner resources a child builds over time."
+    ],
+    "data": {
+      "left": {"title": "Strivers", "items": ["Seek external validation", "Success = grades, rankings, awards", "Fear failure & disappointing others", "Depend on parental intervention", "Vulnerable to stress & burnout", "Constantly compare themselves"]},
+      "right": {"title": "Thrivers", "items": ["Intrinsic motivation", "Know strengths & weaknesses", "Failure = learning opportunity", "Manage emotions & adversity", "Meaningful relationships", "Success with purpose"]},
+      "footer": "Not intelligence. Not talent. Not income. <b>Inner resources.</b>"
+    }
+  },
+  {
+    "id": "pillars", "type": "pillars", "chapter": "03 · The Seven Character Strengths", "accent": "#e9c46a",
+    "cues": [
+      "Borba organizes these seven strengths into three dimensions.",
+      "Nurturing the Heart: self-confidence and empathy.",
+      "Developing the Mind: self-control, integrity, and curiosity.",
+      "And cultivating the Will: perseverance and optimism."
+    ],
+    "data": {
+      "title": "Heart · Mind · Will",
+      "cols": [
+        {"cue": 1, "name": "Heart", "verb": "Nurturing", "icon": "heart", "color": "#ff6b81", "items": ["Self-Confidence", "Empathy"]},
+        {"cue": 2, "name": "Mind", "verb": "Developing", "icon": "brain", "color": "#4cc9f0", "items": ["Self-Control", "Integrity", "Curiosity"]},
+        {"cue": 3, "name": "Will", "verb": "Cultivating", "icon": "flame", "color": "#ffb703", "items": ["Perseverance", "Optimism"]}
+      ]
+    }
+  },
+  {
+    "id": "s1", "type": "strength", "chapter": "Heart · Strength 01", "accent": "#ff6b81",
+    "cues": [
+      "Strength one: Self-Confidence. The ability to understand, appreciate, and trust your own capabilities.",
+      "It's built on three abilities: self-awareness, strength awareness, and finding purpose.",
+      "Help kids discover and nurture their natural talents. Avoid comparing them with others. Let them make independent decisions, and see who they are beyond their report card.",
+      "The lesson: help children become who they are, not who we want them to be."
+    ],
+    "data": {"num": "01", "part": "Heart", "name": "Self-Confidence", "icon": "sun",
+      "def": "Understanding, appreciating and trusting one's own capabilities.",
+      "abilities": ["Self-Awareness", "Strength Awareness", "Finding Purpose"],
+      "practice": ["Nurture natural talents", "Never compare with others", "Allow independent decisions", "See identity beyond grades"],
+      "lesson": "Help children become who <em>they</em> are — not who we want them to become."}
+  },
+  {
+    "id": "s2", "type": "strength", "chapter": "Heart · Strength 02", "accent": "#ff6b81",
+    "cues": [
+      "Strength two: Empathy. Understanding another person's feelings, perspectives, and needs.",
+      "Its three abilities are emotional literacy, perspective taking, and empathic concern.",
+      "Talk about emotions openly. Encourage acts of kindness, consider different points of view, and create real chances to help others.",
+      "Success isn't only personal achievement. It's also making other people's lives better."
+    ],
+    "data": {"num": "02", "part": "Heart", "name": "Empathy", "icon": "heart-handshake",
+      "def": "Understanding another person's feelings, perspectives and needs.",
+      "abilities": ["Emotional Literacy", "Perspective Taking", "Empathic Concern"],
+      "practice": ["Discuss emotions openly", "Encourage acts of kindness", "Consider other perspectives", "Create chances to help"],
+      "lesson": "Success also means contributing <em>positively</em> to other people's lives."}
+  },
+  {
+    "id": "s3", "type": "strength", "chapter": "Mind · Strength 03", "accent": "#4cc9f0",
+    "cues": [
+      "Strength three: Self-Control. Regulating emotions, managing impulses, staying focused, and making responsible choices.",
+      "It depends on attentive focus, self-management, and healthy decision making.",
+      "Teach emotional regulation and delayed gratification. Cut unnecessary digital distractions, practice breathing and relaxation, and keep routines consistent.",
+      "Children must learn to manage their emotions, instead of letting emotions run their behavior."
+    ],
+    "data": {"num": "03", "part": "Mind", "name": "Self-Control", "icon": "gauge",
+      "def": "Regulating emotions, managing impulses, focusing and deciding responsibly.",
+      "abilities": ["Attentive Focus", "Self-Management", "Healthy Decision Making"],
+      "practice": ["Teach emotional regulation", "Practice delayed gratification", "Reduce digital distractions", "Breathing & consistent routines"],
+      "lesson": "Manage emotions — don't let emotions <em>dictate</em> behavior."}
+  },
+  {
+    "id": "s4", "type": "strength", "chapter": "Mind · Strength 04", "accent": "#4cc9f0",
+    "cues": [
+      "Strength four: Integrity. Acting on ethical principles consistently, even when nobody is watching.",
+      "Its building blocks are moral awareness, moral identity, and ethical thinking.",
+      "Set clear family values. Model honesty yourself. Discuss ethical dilemmas, encourage accountability for mistakes, and celebrate moral courage.",
+      "Character shows up in decisions and actions, not just words or intentions."
+    ],
+    "data": {"num": "04", "part": "Mind", "name": "Integrity", "icon": "shield-check",
+      "def": "Acting on ethical principles consistently — even when nobody is watching.",
+      "abilities": ["Moral Awareness", "Moral Identity", "Ethical Thinking"],
+      "practice": ["Set clear family values", "Model honesty yourself", "Discuss ethical dilemmas", "Own mistakes, honor courage"],
+      "lesson": "Character lives in <em>decisions and actions</em>, not words or intentions."}
+  },
+  {
+    "id": "s5", "type": "strength", "chapter": "Mind · Strength 05", "accent": "#4cc9f0",
+    "cues": [
+      "Strength five: Curiosity. The willingness to explore, question, experiment, and discover new solutions.",
+      "It grows from a curious mindset, creative problem solving, and divergent thinking.",
+      "Welcome questions. Make time for unstructured play and experimentation. Resist giving answers right away, and support interests beyond school subjects.",
+      "Education should create kids who love learning, not just kids who are good at taking exams."
+    ],
+    "data": {"num": "05", "part": "Mind", "name": "Curiosity", "icon": "telescope",
+      "def": "The willingness to explore, question, experiment and discover.",
+      "abilities": ["Curious Mindset", "Creative Problem Solving", "Divergent Thinking"],
+      "practice": ["Encourage questions", "Unstructured play", "Don't rush to give answers", "Support interests beyond school"],
+      "lesson": "Raise kids who <em>love learning</em> — not just kids who ace exams."}
+  },
+  {
+    "id": "s6", "type": "strength", "chapter": "Will · Strength 06", "accent": "#ffb703",
+    "cues": [
+      "Strength six: Perseverance. The determination to keep pursuing meaningful goals, despite setbacks and failures.",
+      "It rests on a growth mindset, goal setting, and learning from failure.",
+      "Praise effort, strategy, and progress. Break big goals into small steps. Let children face manageable difficulties, step back from rescuing, and talk through lessons from mistakes.",
+      "Failure is not a permanent identity. It's a chance to improve."
+    ],
+    "data": {"num": "06", "part": "Will", "name": "Perseverance", "icon": "mountain",
+      "def": "Determination to pursue meaningful goals despite setbacks and failure.",
+      "abilities": ["Growth Mindset", "Goal Setting", "Learning From Failure"],
+      "practice": ["Praise effort & strategy", "Break goals into steps", "Allow manageable struggle", "Step back from rescuing"],
+      "lesson": "Failure is not a permanent identity — it's a chance to <em>improve</em>."}
+  },
+  {
+    "id": "s7", "type": "strength", "chapter": "Will · Strength 07", "accent": "#ffb703",
+    "cues": [
+      "Strength seven: Optimism. Keeping a realistic sense of hope, and seeing possibilities even in hard times.",
+      "Its abilities are optimistic thinking, assertive communication, and hope.",
+      "Build a gratitude habit. Challenge overly negative thinking. Focus on what's within your control, encourage kids to voice their needs, and model constructive responses to adversity.",
+      "Optimism isn't ignoring reality. It's believing that constructive action is still possible."
+    ],
+    "data": {"num": "07", "part": "Will", "name": "Optimism", "icon": "sunrise",
+      "def": "A realistic sense of hope — seeing possibilities in hard times.",
+      "abilities": ["Optimistic Thinking", "Assertive Communication", "Hope"],
+      "practice": ["Build a gratitude habit", "Challenge negative thinking", "Focus on what you control", "Voice needs assertively"],
+      "lesson": "Optimism believes <em>constructive action</em> is still possible."}
+  },
+  {
+    "id": "multiplier", "type": "multiplier", "chapter": "04 · The Multiplier Effect", "accent": "#c77dff",
+    "cues": [
+      "One of the book's most powerful ideas is the Multiplier Effect. Strengths grow stronger when they work together.",
+      "Self-confidence plus curiosity creates creativity and a stronger identity.",
+      "Self-control plus perseverance builds discipline and achievement.",
+      "Empathy plus curiosity deepens understanding and relationships.",
+      "Integrity plus self-control helps kids resist temptation.",
+      "Optimism, perseverance, and curiosity together fuel resilience, motivation, and deeper learning.",
+      "And integrity, curiosity, and empathy lead to meaningful purpose and social contribution.",
+      "Thrivers navigate challenges by drawing on several strengths at once."
+    ],
+    "data": {
+      "combos": [
+        {"cue": 1, "parts": ["Self-Confidence", "Curiosity"], "result": "Creativity & identity"},
+        {"cue": 2, "parts": ["Self-Control", "Perseverance"], "result": "Discipline & achievement"},
+        {"cue": 3, "parts": ["Empathy", "Curiosity"], "result": "Understanding & relationships"},
+        {"cue": 4, "parts": ["Integrity", "Self-Control"], "result": "Resisting temptation"},
+        {"cue": 5, "parts": ["Optimism", "Perseverance", "Curiosity"], "result": "Resilience & deep learning"},
+        {"cue": 6, "parts": ["Integrity", "Curiosity", "Empathy"], "result": "Purpose & contribution"}
+      ],
+      "footer": "Thrivers draw on <b>several strengths at once</b>."
+    }
+  },
+  {
+    "id": "science", "type": "science", "chapter": "05 · The Science of Resilience", "accent": "#2ec4b6",
+    "cues": [
+      "The book draws on decades of research: Emmy Werner on resilience, Carol Dweck on growth mindset, Angela Duckworth on grit, Martin Seligman on optimism, Benjamin Bloom on talent, and Daniel Goleman on attention and emotional intelligence.",
+      "A key finding: resilient children often share two protective factors.",
+      "First, a meaningful relationship with at least one supportive adult.",
+      "Second, learned personal capabilities that help them navigate adversity.",
+      "Hard beginnings don't have to decide a child's future. Still, these strengths are protective factors, not guarantees, and not a substitute for professional mental health support."
+    ],
+    "data": {
+      "people": [["Emmy Werner", "Childhood resilience"], ["Carol Dweck", "Growth mindset"], ["Angela Duckworth", "Grit"], ["Martin Seligman", "Optimism"], ["Benjamin Bloom", "Talent development"], ["Daniel Goleman", "Attention & EQ"]],
+      "factors": [
+        {"cue": 2, "icon": "users", "title": "One supportive adult", "text": "A meaningful relationship with at least one caring adult."},
+        {"cue": 3, "icon": "sprout", "title": "Learned capabilities", "text": "Personal skills that help navigate adversity."}
+      ],
+      "caveat": "Protective factors — not guarantees, and no substitute for professional mental health support."
+    }
+  },
+  {
+    "id": "mistakes", "type": "mistakes", "chapter": "06 · Common Parenting Mistakes", "accent": "#ef476f",
+    "cues": [
+      "Borba also challenges some common parenting habits.",
+      "Over-emphasizing academic performance. Over-scheduling. Helicopter parenting. Constant comparison.",
+      "Relying too much on rewards. Solving every problem for kids. Neglecting emotional and moral growth. And imposing our own ambitions.",
+      "Too much protection can quietly take away the very chances children need to become independent, competent, and resilient."
+    ],
+    "data": {
+      "items": [
+        {"cue": 1, "t": "Academics above all"}, {"cue": 1, "t": "Overscheduling"}, {"cue": 1, "t": "Helicopter parenting"}, {"cue": 1, "t": "Constant comparison"},
+        {"cue": 2, "t": "Over-reliance on rewards"}, {"cue": 2, "t": "Solving every problem"}, {"cue": 2, "t": "Neglecting moral & emotional growth"}, {"cue": 2, "t": "Imposing parental ambitions"}
+      ],
+      "footer": "Over-protection removes the very chances kids need to grow <b>independent, competent & resilient</b>."
+    }
+  },
+  {
+    "id": "framework", "type": "framework", "chapter": "07 · Practical Parenting Framework", "accent": "#06d6a0",
+    "cues": [
+      "So, how do you start? With simple everyday habits.",
+      "Daily: have real conversations without screens, ask about feelings, recognize effort and kindness, let kids solve problems, and practice gratitude together.",
+      "Weekly: support their genuine interests, talk about challenges and lessons, help others together, and spend time with no performance expectations.",
+      "Monthly: choose one character ability, practice it as a family, watch for growth, and gradually step back as children become more independent.",
+      "The book even includes a thirty-five question assessment to help identify your child's strengths."
+    ],
+    "data": {
+      "cols": [
+        {"cue": 1, "name": "Daily", "items": ["Screen-free conversations", "Ask about feelings", "Recognize effort & kindness", "Independent problem solving", "Gratitude together"]},
+        {"cue": 2, "name": "Weekly", "items": ["Follow genuine interests", "Discuss challenges & lessons", "Help others together", "Time without expectations"]},
+        {"cue": 3, "name": "Monthly", "items": ["Pick one ability", "Practice as a family", "Observe growth", "Fade the reminders"]}
+      ],
+      "footer": "Includes a <b>35-question</b> character-strength assessment"
+    }
+  },
+  {
+    "id": "questions", "type": "questions", "chapter": "08 · Questions to Reflect On", "accent": "#a8dadc",
+    "cues": [
+      "Here are questions every parent should reflect on.",
+      "Does my child feel loved regardless of grades?",
+      "Am I developing my child's potential, or chasing my own ambitions?",
+      "Can my child solve problems without me?",
+      "Does my child know how to respond to failure?",
+      "Is there enough time to explore, play, and simply enjoy childhood?",
+      "Do I value kindness and integrity as much as achievement?",
+      "And am I modeling the strengths I expect to see?"
+    ],
+    "data": {
+      "qs": [
+        "Does my child feel loved regardless of grades?",
+        "Am I developing their potential — or my ambitions?",
+        "Can my child solve problems without me?",
+        "Does my child know how to respond to failure?",
+        "Is there time to explore, play and enjoy childhood?",
+        "Do I value kindness & integrity as much as achievement?",
+        "Am I modeling the strengths I expect?"
+      ]
+    }
+  },
+  {
+    "id": "critique", "type": "critique", "chapter": "09 · Critical Perspective", "accent": "#b8c0ff",
+    "cues": [
+      "A critical perspective. The book's greatest strength is how it turns psychological research into practical, accessible strategies.",
+      "But much of it is rooted in the American educational context, so its ideas should be adapted to each family's culture, circumstances, and child.",
+      "It's best seen as a practical synthesis of research, not a universally proven formula for success."
+    ],
+    "data": {
+      "pro": {"title": "Strength", "text": "Research turned into practical, accessible strategies — a clear framework beyond academic metrics."},
+      "con": {"title": "Limitation", "text": "Rooted in an American context — adapt to your culture, circumstances and child."},
+      "verdict": "A practical <b>synthesis</b> of research — not a universal formula."
+    }
+  },
+  {
+    "id": "takeaway", "type": "takeaway", "chapter": "10 · Final Takeaway", "accent": "#f4a261",
+    "cues": [
+      "Academic achievement still matters. But it should complement character, not replace it.",
+      "We can't remove every difficulty our children will face. We can equip them to navigate those difficulties on their own.",
+      "The true measure of parenting is who our children become when we are no longer there to guide them.",
+      "Prepare the child for the road, not the road for the child.",
+      "Raise a Thriver, not merely a Striver."
+    ],
+    "data": {
+      "lines": [
+        {"cue": 0, "html": "Achievement should <em>complement</em> character — not replace it."},
+        {"cue": 1, "html": "We can't remove every difficulty. We can <em>equip</em> them."},
+        {"cue": 2, "html": "Who do they become when we're <em>no longer there?</em>"}
+      ],
+      "quote": {"cue": 3, "html": "Prepare the child for the road,<br>not the road for the child."},
+      "final": {"cue": 4, "html": "Raise a <b>Thriver</b>, not merely a <span class='strike'>Striver</span>."}
+    }
+  },
+  {
+    "id": "outro", "type": "outro", "chapter": "", "accent": "#f4a261",
+    "cues": ["Thrivers, by Michele Borba."],
+    "data": {"title": "Thrivers", "author": "Michele Borba, Ed.D.", "source": "G. P. Putnam's Sons, 2021"}
+  }
+]
